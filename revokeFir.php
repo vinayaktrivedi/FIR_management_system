@@ -1,19 +1,5 @@
 <?php
 
-session_start();
-
-if(isset($_SESSION["msg"])) {
-	$msg = $_SESSION["msg"];
-	session_unset($_SESSION["msg"]);
-} else {
-	$msg = "";
-}
-if(isset($_SESSION["error"])) {
-	$error = $_SESSION["error"];
-	session_unset($_SESSION["error"]);
-} else {
-	$error = "";
-}
 
 function test_input($data) {
   $data = trim($data);
