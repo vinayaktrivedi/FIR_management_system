@@ -1,47 +1,111 @@
 <?php
 
-	$return = <<<HTML
-	<!DOCTYPE html>
-<html>
+	$return =<<<HTML
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Register</title>
-<style>
-	.register_form { 
-		margin: 0 auto; 
-		width:280px;
-	}
-	.message {
-		color:green;
-	}
-	.error {
-		color:red;
-	}
-
-</style>
+	<title>Contact V1</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
 </head>
-
-
 <body>
-	<!-- error and message-->
-	<div class="message"><center>{$msg}</center></div><br />
-	<div class="error"><center>{$error}</center></div><br />
+
+	<div class="contact1">
 	
-	<!-- register FIr-->
-	<form action="registerFir.php" method="post">
-	<input type="hidden" name="stage" value="register_form" >	
-	<input type="submit" name="allreg" style="float:right;" value="Register FIR" >
-	</form>
+		<div class="container-contact1">
+		<form action="registerFir.php" method="post" >
+	 			<input type="hidden" name="stage" value="register_form" >	
+ 				<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Register FIR" >
+			 </form>
+			 <br /><br />
+			 <form action="revokeFir.php" method="post">
+			 	<input type="hidden" name="stage" value="revoke_form" >	
+			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Revoke FIR" >
+			</form>
+			<br>
+			
+			
+			<form class="contact1-form validate-form" action="query.php" method="post">
 
-	<!-- revoke Fir-->
-	<form action="revokeFir.php" method="post">
-	<input type="hidden" name="stage" value="revoke_form" >	
-	<input type="submit" name="allreg" style="float:right;" value="Revoke FIR" >
-	</form>
 
-	<!-- Stats-->
+				<span class="contact1-form-title">
+					Query
+				</span>
+				<div class="wrap-input1 validate-input" data-validate = "Message is required">
+				<input type="radio" name="query_type" value="select">  Select
+				<input type="radio" name="query_type" value="exec">  Exec
+				
+				<span class="shadow-input1"></span>
+
+				</div>
+
+				<div class="wrap-input1 validate-input" data-validate = "Message is required">
+					<textarea class="input1" name="query" placeholder="Query"></textarea>
+					<span class="shadow-input1"></span>
+				</div>
+
+				<div class="container-contact1-form-btn">
+					<button class="contact1-form-btn">
+						<span>
+							Query
+							<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+						</span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+
+<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/tilt/tilt.jquery.min.js"></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+	</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+</script>
+
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
 
 </body>
 </html>
+
 HTML;
 	echo $return;
 ?>
