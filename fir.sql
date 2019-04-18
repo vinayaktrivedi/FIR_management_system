@@ -70,7 +70,6 @@ CREATE TABLE `missingcitizens` (
   `area_id` int(10)  NOT NULL,
   `special_clue` varchar(45) DEFAULT NULL,
   `username` varchar(45) NOT NULL,
-  FOREIGN KEY (`username`) REFERENCES `login` (`username`),
   FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`),
   FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`)
 );
@@ -81,7 +80,6 @@ CREATE TABLE `officer` (
   `Jdate` datetime NOT NULL,
   `desi_id` int(10)  NOT NULL,
   `poilcestation_id` int(10)  NOT NULL,
-  FOREIGN KEY (`username`) REFERENCES `login` (`username`),
   FOREIGN KEY (`desi_id`) REFERENCES `designation` (`desi_id`),
   FOREIGN KEY (`poilcestation_id`) REFERENCES `policestation` (`poilcestation_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -117,23 +115,53 @@ CREATE TABLE `profile` (
   `id` INTEGER PRIMARY KEY   NOT NULL,
   `pincode` int(10)  NOT NULL,
   `area_id` int(10)  DEFAULT NULL,
-  FOREIGN KEY (`username`) REFERENCES `login` (`username`),
   FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`),
   FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`)
 );
 
-  PRAGMA foreign_keys = OFF;
---
--- Dumping data for table `profile`
---
-INSERT INTO `fir_details` (`F_id`,`date`,`time`,`description`,`status`,`crime_id`,`id_proof_type`,`id_proof_no`,`crimelocation`,`reg_id`,`criminal_id`,`victim_id`,`dt_time`,`area_id`) VALUES 
- (1,'2010-04-25 00:00:00','2010-10-10 00:00:00','laptop','1',2,'Election Card',4294967295,'80 foot road',40,41,43,'0000-00-00 00:00:00',6),
- (2,'1995-04-05 00:00:00','2010-10-10 00:00:00','hand bag stolen','1',2,'Election Card',70707070,'Paldi',44,45,46,'0000-00-00 00:00:00',1),
- (3,'1995-04-05 00:00:00','2010-10-10 00:00:00','hand bag stolen','1',2,'Election Card',70707070,'Paldi',44,45,47,'0000-00-00 00:00:00',1),
- (4,'2010-02-02 00:00:00','2010-10-10 00:00:00','Mobile Stallen','1',2,'Election Card',380380,'At Mahalaxmi Cross Road',48,49,50,'0000-00-00 00:00:00',1),
- (5,'2010-04-01 00:00:00','2010-10-00 00:00:00','laptop','1',2,'Election Card',346875,'at ms uni road',51,52,54,NULL,6);
+ PRAGMA foreign_keys = ON;
 
--- /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
+
+ INSERT INTO `city` (`city_name`) VALUES 
+ ('Ahmedabad'),
+ ('Baroda'),
+ ('Surat'),
+ ('Gandhinagar'),
+ ('Surendranagar');
+
+INSERT INTO `area` (`area_name`,`pincode`,`city_id`) VALUES 
+ ('Vasna',380000,1),
+ ('Mamnagar',380052,1),
+ ('Navarangpura',380006,1),
+ ('Vastrapur',380001,1),
+ ('Karelibag',400001,2),
+ ('Alkapuri',400002,2);
+
+
+ INSERT INTO `policestation` (`area_id`,`address`,`contact_no`,`Email_id`,`contact_person`,`starting_date`,`policestation_name`,`city_id`) VALUES 
+ (1,'Vasna Police Station,Nr.Telephone Ex. Office',26576156,'vasna_ps@yahoo.com','Rajeshbhai','2009-10-10 00:00:00','Vasna Police Station',1),
+ (1,'Navarangpura Police Station,Nr.Post Office',26500000,'navarangpua_ps@yahoo.com','Chandreshbhai','2008-10-10 00:00:00','Navarangpura Police Station',1),
+ (6,'Nr.Head Post Office,\r\nKarelibag Road,\r\nVadodara.',28585858,'karelibag_ps@yahoo.com','Abhijit Jadeja','0000-00-00 00:00:00','Karelibag Police Station',2),
+ (6,'Nr.Post Office',236545,'aps@yahoo.com','Yadavbhai','2010-04-06 00:00:00','Alkapuri Police Station',1),
+ (3,'Nr.Post Office',236545,'aps@yahoo.com','Yadavbhai','2010-04-06 00:00:00','Alkapuri Police Station',1);
+
+
+INSERT INTO `designation` (`desi_name`) VALUES 
+ ('PSI'),
+ ('Head Constable'),
+ ('Constable'),
+ ('PI');
+
+ INSERT INTO `crimetype` (`crime_type`,`description`) VALUES 
+ ('MURDER','very denger'),
+ ('THEFT','U have to be careful.');
+
+ INSERT INTO `officer` (`username`,`Jdate`,`desi_id`,`poilcestation_id`) VALUES 
+ ('param','2010-04-13 00:00:00',4,4),
+ ('komal','2010-04-05 00:00:00',2,1),
+ ('kinjal','2010-04-19 00:00:00',2,2),
+ ('pradeep','2010-04-19 00:00:00',2,3);
+
 INSERT INTO `profile` (`first_name`,`middle_name`,`last_name`,`gender`,`Dob`,`address`,`contact_no`,`emailid`,`username`,`city_id`,`id`,`pincode`,`area_id`) VALUES 
  ('ggg','g','ggg','Male','2010-04-20 00:00:00','ff','444444444','d@yahoo.com','ggg',1,12,444444,NULL),
  ('krishi','K','thakkar','Female','2002-05-06 00:00:00','Kareli bag','9998205920','k@gmail.com','krishi',2,13,400000,NULL),
@@ -160,45 +188,11 @@ INSERT INTO `profile` (`first_name`,`middle_name`,`last_name`,`gender`,`Dob`,`ad
  ('sweta','s','tiwari','Female',NULL,'navrangpura','9998027555','s@yahoo.com','shyam',1,53,436567,NULL),
  ('sweta','s','tiwari','Female',NULL,'navrangpura','9998027555','s@yahoo.com','shyam',1,54,436567,NULL),
  ('aaa','a','aaa','Female',NULL,'paladi','9427630171','a@yahoo.com','shyam',1,55,100000,NULL);
--- /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
+--
+INSERT INTO `fir_details` (`F_id`,`date`,`time`,`description`,`status`,`crime_id`,`id_proof_type`,`id_proof_no`,`crimelocation`,`reg_id`,`criminal_id`,`victim_id`,`dt_time`,`area_id`) VALUES 
+ (1,'2010-04-25 00:00:00','2010-10-10 00:00:00','laptop','1',2,'Election Card',4294967295,'80 foot road',40,41,43,'0000-00-00 00:00:00',6),
+ (2,'1995-04-05 00:00:00','2010-10-10 00:00:00','hand bag stolen','1',2,'Election Card',70707070,'Paldi',44,45,46,'0000-00-00 00:00:00',1),
+ (3,'1995-04-05 00:00:00','2010-10-10 00:00:00','hand bag stolen','1',2,'Election Card',70707070,'Paldi',44,45,47,'0000-00-00 00:00:00',1),
+ (4,'2010-02-02 00:00:00','2010-10-10 00:00:00','Mobile Stallen','1',2,'Election Card',380380,'At Mahalaxmi Cross Road',48,49,50,'0000-00-00 00:00:00',1),
+ (5,'2010-04-01 00:00:00','2010-10-00 00:00:00','laptop','1',2,'Election Card',346875,'at ms uni road',51,52,54,NULL,6);
 
-
-
-
-INSERT INTO `area` (`area_id`,`area_name`,`pincode`,`city_id`) VALUES 
- (1,'Vasna',380000,1),
- (2,'Mamnagar',380052,1),
- (3,'Navarangpura',380006,1),
- (4,'Vastrapur',380001,1),
- (5,'Karelibag',400001,2),
- (6,'Alkapuri',400002,2);
-
- INSERT INTO `officer` (`username`,`Jdate`,`desi_id`,`poilcestation_id`) VALUES 
- ('param','2010-04-13 00:00:00',4,41),
- ('komal','2010-04-05 00:00:00',2,1),
- ('kinjal','2010-04-19 00:00:00',2,2),
- ('pradeep','2010-04-19 00:00:00',2,44);
-
-INSERT INTO `designation` (`desi_id`,`desi_name`) VALUES 
- (1,'PSI'),
- (2,'Head Constable'),
- (3,'Constable'),
- (4,'PI');
-
- INSERT INTO `crimetype` (`crime_id`,`crime_type`,`description`) VALUES 
- (1,'MURDER','very denger'),
- (2,'THEFT','U have to be careful.');
-
- INSERT INTO `city` (`city_id`,`city_name`) VALUES 
- (1,'Ahmedabad'),
- (2,'Baroda'),
- (3,'Surat'),
- (4,'Gandhinagar'),
- (5,'Surendranagar');
-
- INSERT INTO `policestation` (`poilcestation_id`,`area_id`,`address`,`contact_no`,`Email_id`,`contact_person`,`starting_date`,`policestation_name`,`city_id`) VALUES 
- (1,1,'Vasna Police Station,Nr.Telephone Ex. Office',26576156,'vasna_ps@yahoo.com','Rajeshbhai','2009-10-10 00:00:00','Vasna Police Station',1),
- (2,1,'Navarangpura Police Station,Nr.Post Office',26500000,'navarangpua_ps@yahoo.com','Chandreshbhai','2008-10-10 00:00:00','Navarangpura Police Station',1),
- (41,6,'Nr.Head Post Office,\r\nKarelibag Road,\r\nVadodara.',28585858,'karelibag_ps@yahoo.com','Abhijit Jadeja','0000-00-00 00:00:00','Karelibag Police Station',2),
- (44,6,'Nr.Post Office',236545,'aps@yahoo.com','Yadavbhai','2010-04-06 00:00:00','Alkapuri Police Station',1),
- (45,6,'Nr.Post Office',236545,'aps@yahoo.com','Yadavbhai','2010-04-06 00:00:00','Alkapuri Police Station',1);
