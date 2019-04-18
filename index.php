@@ -40,9 +40,13 @@ if(isset($_SESSION["error"])) {
 <body>
 	<div class="message"><center>{$msg}</center></div><br />
 	<div class="error"><center>{$error}</center></div><br />
-	<form action="admin.php" method="post">
+	<form action="registerFir.php" method="post">
 	<input type="hidden" name="stage" value="authentication" >	
-	<input type="submit" name="allreg" style="float:right;" value="See All Registration" >
+	<input type="submit" name="allreg" style="float:right;" value="Register FIR" >
+	</form>
+	<form action="revokeFir.php" method="post">
+	<input type="hidden" name="stage" value="authentication" >	
+	<input type="submit" name="allreg" style="float:right;" value="Revoke FIR" >
 	</form>
 	<form action="register.php" method="post" class="register_form">
 			<center><label for="register"><h2>Registration</h2></label></center>
