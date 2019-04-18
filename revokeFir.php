@@ -1,168 +1,106 @@
 <?php
 
+#showing form for registering FIR
+if($_POST["stage"]=="revoke_form"){
+	$return =<<<HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Contact V1</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+</head>
+<body>
 
-function test_input($data) {
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
-
-if($_POST["stage"]=="authentication"){
-	$return = <<<HTML
-	<!DOCTYPE html>
-	<html>
-	<head>
-	<title>Admin Authentication</title>
-	<style>
-		form { 
-			margin: 0 auto; 
-			width:280px;
-		}
-		.message {
-			color:green;
-		}
-		.error {
-			color:red;
-		}
-	</style>
-	</head>
-	<body>
-		<div class="message"><center>{$msg}</center></div><br />
-		<div class="error"><center>{$error}</center></div><br />
-		<button name="anotherreg" style="float:right;" onclick="window.location='/index.php';">Another Registration</button>
-		<form action="admin.php" method="post">
-				<center><label for="register"><h2>Admin Authentication</h2></label></center>
-				<br />
-				<input type="hidden" name="stage" value="details" >	
-				<label style="float:left;" for="name"><strong>Admin login :</strong></label>
-				<input style="float:right;" type="text" name="adminlogin" required />
-				<br /><br />
-				<label style="float:left;" for="passwd"><strong>Password :</strong></label>
-				<input style="float:right;" type="password" name="adminpasswd" required/>
-				<br /><br />
-				<center><input type="submit" value="Log in" name="adminauth"></center>
-		</form>
-	</body>
-	</html>
-HTML;
-	echo $return;
-}
-
-else if($_POST["stage"]=="details"){
-	$db = new SQLite3('mysqlitedb.db');
-	$adminlogin=test_input($_POST["adminlogin"]);
-	$adminpasswd=test_input($_POST["adminpasswd"]);
-	$result = $db->query("SELECT * FROM admin WHERE adminlogin = '$adminlogin'");
-	$count=0;
-	while($row = $result->fetchArray()) {
-		$count++;
-	}
-	if($count == 0){
-		$_SESSION["error"]="Login Failed: Admin login not found";
-		header('Location: admin.php');
-		exit;
-	}
-	else if($count == 1){
-		$row = $result->fetchArray();
-		if(strcmp($row[1],$adminpasswd)!=0){
-			$_SESSION["error"]="Login Failed: Password Incorrect";
-			header('Location: admin.php');
-			exit;
-		}
-		else{
-			$return = <<<HTML
-	<!DOCTYPE html>
-	<html>
-	<head>
-	<title>All Registration</title>
-	<style>
-		table{
-			 border-collapse: collapse;
-			 border: 1px solid black;
-			 width:80%;
-		}
-		th,td{
-			border: 1px solid black;
-		 	border-collapse: collapse;	
-		}
-	</style>
-	</head>
-	<body>
-		<button name="anotherreg" style="float:right;" onclick="window.location='/index.php';">Another Registration</button>
-		<center><h2>All Registration</h2></center>
-		<br /><br />
-		<center><table>
-		<tr>
-			<th>Name</th>
-    		<th>Address</th> 
-    		<th>Email</th> 
-    		<th>Mobile</th> 
-    		<th>Account no.</th>
-		</tr>
-HTML;
-			
-			$results = $db->query('SELECT * FROM registrations');
-			while($row = $results->fetchArray()){
-	    		$return .= <<<HTML
-		<tr>
-			<td>{$row[0]}</td>
-    		<td>{$row[1]}</td> 
-    		<td>{$row[2]}</td> 
-    		<td>{$row[3]}</td> 
-    		<td>{$row[4]}</td>
-		</tr>
-HTML;
-			}
-			$return .= <<<HTML
-		</table></center>
-		</body>
-	</html>
-HTML;
-			echo $return;
-		}	
-	}
+	<div class="contact1">
 	
-}
+		<div class="container-contact1">	
+			
+			<form class="contact1-form validate-form" action="registerFir.php" method="post">
 
-else{
-	$return = <<<HTML
-	<!DOCTYPE html>
-	<html>
-	<head>
-	<title>Admin Authentication</title>
-	<style>
-		form { 
-			margin: 0 auto; 
-			width:280px;
-		}
-		.message {
-			color:green;
-		}
-		.error {
-			color:red;
-		}
-	</style>
-	</head>
-	<body>
-		<div class="message"><center>{$msg}</center></div><br />
-		<div class="error"><center>{$error}</center></div><br />
-		<button name="anotherreg" style="float:right;" onclick="window.location='/index.php';">Another Registration</button>
-		<form action="admin.php" method="post">
-				<center><label for="register"><h2>Admin Authentication</h2></label></center>
-				<br />
-				<input type="hidden" name="stage" value="details" >	
-				<label style="float:left;" for="name"><strong>Admin login :</strong></label>
-				<input style="float:right;" type="text" name="adminlogin" required />
-				<br /><br />
-				<label style="float:left;" for="passwd"><strong>Password :</strong></label>
-				<input style="float:right;" type="password" name="adminpasswd" required/>
-				<br /><br />
-				<center><input type="submit" value="Log in" name="adminauth"></center>
-		</form>
-	</body>
-	</html>
+			<input type="hidden" name="stage" value="register_submit" >
+				<span class="contact1-form-title">
+					Revoke FIR
+				</span>
+
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="id" placeholder="ID">
+					<span class="shadow-input1"></span>
+				</div>
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="f_id" placeholder="FIR ID">
+					<span class="shadow-input1"></span>
+				</div>
+				
+				<div class="container-contact1-form-btn">
+					<button class="contact1-form-btn">
+						<span>
+							Revoke
+							<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+						</span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+
+<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/tilt/tilt.jquery.min.js"></script>
+	<script >
+		$('.js-tilt').tilt({
+			scale: 1.1
+		})
+	</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+</script>
+
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+
+</body>
+</html>
+
 HTML;
 	echo $return;
+}
+
+
+#backend for registering 
+else if($_POST["stage"]=="revoke_submit"){
+	//$db = new SQLite3('mysqlitedb.db');
 }
 ?>
