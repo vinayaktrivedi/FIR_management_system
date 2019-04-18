@@ -10,7 +10,7 @@
 
 DROP TABLE IF EXISTS `fir_details`;
 CREATE TABLE `fir_details` (
-  'F_id' INT  NOT NULL AUTOINCREMENT,
+  'F_id' INTEGER  PRIMARY KEY NOT NULL,
   `date` datetime NOT NULL,
   `time` datetime NOT NULL,
   `description` varchar(45) DEFAULT NULL,
@@ -24,17 +24,11 @@ CREATE TABLE `fir_details` (
   `victim_id` int(10)  NOT NULL,
   `dt_time` datetime DEFAULT NULL,
   `area_id` int(10)  DEFAULT NULL,
-  PRIMARY KEY (`F_id`),
-  KEY `FK_fir_details_1` (`crime_id`),
-  KEY `FK_fir_details_2` (`reg_id`),
-  KEY `FK_fir_details_3` (`criminal_id`),
-  KEY `FK_fir_details_4` (`victim_id`),
-  KEY `FK_fir_details_5` (`area_id`),
-  CONSTRAINT `FK_fir_details_1` FOREIGN KEY (`crime_id`) REFERENCES `crimetype` (`crime_id`),
-  CONSTRAINT `FK_fir_details_2` FOREIGN KEY (`reg_id`) REFERENCES `profile` (`id`),
-  CONSTRAINT `FK_fir_details_3` FOREIGN KEY (`criminal_id`) REFERENCES `profile` (`id`),
-  CONSTRAINT `FK_fir_details_4` FOREIGN KEY (`victim_id`) REFERENCES `profile` (`id`),
-  CONSTRAINT `FK_fir_details_5` FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`)
+  FOREIGN KEY (`crime_id`) REFERENCES `crimetype` (`crime_id`),
+  FOREIGN KEY (`reg_id`) REFERENCES `profile` (`id`),
+  FOREIGN KEY (`criminal_id`) REFERENCES `profile` (`id`),
+  FOREIGN KEY (`victim_id`) REFERENCES `profile` (`id`),
+  FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`)
 ) 
 
 --
@@ -52,35 +46,19 @@ CREATE TABLE `fir_details` (
 
 DROP TABLE IF EXISTS `area`;
 CREATE TABLE `area` (
-  `area_id` int(10)  NOT NULL AUTOINCREMENT,
+  `area_id` INTEGER  PRIMARY KEY  NOT NULL,
   `area_name` varchar(45) NOT NULL,
   `pincode` int(10)  NOT NULL,
   `city_id` int(10)  NOT NULL,
-  PRIMARY KEY (`area_id`),
-  KEY `FK_area_1` (`city_id`),
-  CONSTRAINT `FK_area_1` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`)
-) 
-
-
-/*!40000 ALTER TABLE `area` ENABLE KEYS */;
-
-
---
--- Definition of table `city`
---
+  FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`)
+);
 
 DROP TABLE IF EXISTS `city`;
 CREATE TABLE `city` (
-  `city_id` int(10)  NOT NULL AUTOINCREMENT,
-  `city_name` varchar(45) NOT NULL,
-  PRIMARY KEY (`city_id`)
-) 
-
---
--- Dumping data for table `city`
---
-
-/*!40000 ALTER TABLE `city` DISABLE KEYS */;
+  `city_id` INTEGER  PRIMARY KEY NOT NULL,
+  `city_name` varchar(45) NOT NULL
+  
+);
 
 
 
@@ -90,10 +68,10 @@ CREATE TABLE `city` (
 
 DROP TABLE IF EXISTS `crimetype`;
 CREATE TABLE `crimetype` (
-  `crime_id` int(10)  NOT NULL AUTOINCREMENT,
+  `crime_id` INTEGER  PRIMARY KEY  NOT NULL,
   `crime_type` varchar(45) NOT NULL,
-  `description` varchar(45) NOT NULL,
-  PRIMARY KEY (`crime_id`)
+  `description` varchar(45) NOT NULL
+  
 )
 
 --
@@ -111,9 +89,9 @@ CREATE TABLE `crimetype` (
 
 DROP TABLE IF EXISTS `designation`;
 CREATE TABLE `designation` (
-  `desi_id` int(10)  NOT NULL AUTOINCREMENT,
-  `desi_name` varchar(45) NOT NULL,
-  PRIMARY KEY (`desi_id`)
+  `desi_id` INTEGER  PRIMARY KEY  NOT NULL,
+  `desi_name` varchar(45) NOT NULL
+  
 ) 
 
 --
@@ -130,7 +108,7 @@ CREATE TABLE `designation` (
 
 DROP TABLE IF EXISTS `missingcitizens`;
 CREATE TABLE `missingcitizens` (
-  `missing_id` int(10)  NOT NULL AUTOINCREMENT,
+  `missing_id` INTEGER  PRIMARY KEY  NOT NULL,
   `first_name` varchar(45) NOT NULL,
   `middle_name` varchar(45) NOT NULL,
   `last_name` varchar(45) NOT NULL,
@@ -140,13 +118,9 @@ CREATE TABLE `missingcitizens` (
   `area_id` int(10)  NOT NULL,
   `special_clue` varchar(45) DEFAULT NULL,
   `username` varchar(45) NOT NULL,
-  PRIMARY KEY (`missing_id`),
-  KEY `FK_missingcitizens_1` (`city_id`),
-  KEY `FK_missingcitizens_2` (`area_id`),
-  KEY `FK_missingcitizens_3` (`username`),
-  CONSTRAINT `FK_missingcitizens_3` FOREIGN KEY (`username`) REFERENCES `login` (`username`),
-  CONSTRAINT `FK_missingcitizens_1` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`),
-  CONSTRAINT `FK_missingcitizens_2` FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`)
+  FOREIGN KEY (`username`) REFERENCES `login` (`username`),
+  FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`),
+  FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`)
 ) ;
 
 --
@@ -167,12 +141,9 @@ CREATE TABLE `officer` (
   `Jdate` datetime NOT NULL,
   `desi_id` int(10)  NOT NULL,
   `poilcestation_id` int(10)  NOT NULL,
-  KEY `FK_officer_1` (`username`),
-  KEY `FK_officer_2` (`desi_id`),
-  KEY `FK_officer_3` (`poilcestation_id`),
-  CONSTRAINT `FK_officer_1` FOREIGN KEY (`username`) REFERENCES `login` (`username`),
-  CONSTRAINT `FK_officer_2` FOREIGN KEY (`desi_id`) REFERENCES `designation` (`desi_id`),
-  CONSTRAINT `FK_officer_3` FOREIGN KEY (`poilcestation_id`) REFERENCES `policestation` (`poilcestation_id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`username`) REFERENCES `login` (`username`),
+  FOREIGN KEY (`desi_id`) REFERENCES `designation` (`desi_id`),
+  FOREIGN KEY (`poilcestation_id`) REFERENCES `policestation` (`poilcestation_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 --
@@ -189,7 +160,7 @@ CREATE TABLE `officer` (
 
 DROP TABLE IF EXISTS `policestation`;
 CREATE TABLE `policestation` (
-  `poilcestation_id` int(10)  NOT NULL AUTOINCREMENT,
+  `poilcestation_id` INTEGER PRIMARY KEY  NOT NULL,
   `area_id` int(10)  NOT NULL,
   `address` varchar(255) NOT NULL,
   `contact_no` int(10)  NOT NULL,
@@ -198,11 +169,8 @@ CREATE TABLE `policestation` (
   `starting_date` datetime NOT NULL,
   `policestation_name` varchar(45) NOT NULL,
   `city_id` int(10)  NOT NULL,
-  PRIMARY KEY (`poilcestation_id`),
-  KEY `FK_policestation_1` (`area_id`),
-  KEY `FK_policestation_2` (`city_id`),
-  CONSTRAINT `FK_policestation_1` FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`),
-  CONSTRAINT `FK_policestation_2` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`)
+  FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`),
+  FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`)
 ) 
 
 --
@@ -228,52 +196,48 @@ CREATE TABLE `profile` (
   `address` varchar(255) NOT NULL,
   `contact_no` varchar(45) DEFAULT NULL,
   `emailid` varchar(255) NOT NULL,
-  `profile_photo` varchar(45) DEFAULT NULL,
   `username` varchar(45) NOT NULL,
   `city_id` int(10)  NOT NULL,
-  `id` int(10)  NOT NULL AUTOINCREMENT,
+  `id` INTEGER PRIMARY KEY   NOT NULL,
   `pincode` int(10)  NOT NULL,
   `area_id` int(10)  DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_profile_1` (`username`),
-  KEY `FK_profile_2` (`city_id`),
-  KEY `FK_profile_3` (`area_id`),
-  CONSTRAINT `FK_profile_1` FOREIGN KEY (`username`) REFERENCES `login` (`username`),
-  CONSTRAINT `FK_profile_2` FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`),
-  CONSTRAINT `FK_profile_3` FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`)
-)
+  FOREIGN KEY (`username`) REFERENCES `login` (`username`),
+  FOREIGN KEY (`city_id`) REFERENCES `city` (`city_id`),
+  FOREIGN KEY (`area_id`) REFERENCES `area` (`area_id`)
+);
 
+  PRAGMA foreign_keys = OFF;
 --
 -- Dumping data for table `profile`
 --
 
 -- /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
--- INSERT INTO `profile` (`first_name`,`middle_name`,`last_name`,`gender`,`Dob`,`address`,`contact_no`,`emailid`,`profile_photo`,`username`,`city_id`,`id`,`pincode`,`area_id`) VALUES 
---  ('ggg','g','ggg','Male','2010-04-20 00:00:00','ff','444444444','d@yahoo.com','upload/Forest.jpg','ggg',1,12,444444,NULL),
---  ('krishi','K','thakkar','Female','2002-05-06 00:00:00','Kareli bag','9998205920','k@gmail.com','upload/Winter Leaves.jpg','krishi',2,13,400000,NULL),
---  ('fgfgf','fff','fffffgf','Male',NULL,'gdshdh','888888888888','fg@yahoo.com',NULL,'fff',1,14,464643,NULL),
---  ('param','l','patel','Male',NULL,'GSEB ','5555555555','param@gmail.com',NULL,'param',3,15,500000,NULL),
---  ('komal','p','shah','Female',NULL,'chintamani','07926576156','koms@yahoo.com',NULL,'komal',1,16,380058,NULL),
---  ('kinjal','m','patel','Female',NULL,'gf','111111111111','k@gmail.com',NULL,'kinjal',3,17,435555,NULL),
---  ('pradeep','m','purohit','Male',NULL,'ggfdggfdg','6546687687','p@yahoo.com',NULL,'pradeep',3,19,345555,NULL),
---  ('sss','s','sss','Male',NULL,'ssssssxxxsssss','57657657575','s@yahoo.com',NULL,'sss',2,20,400000,NULL),
---  ('jjj','j','jjj','Male',NULL,'jjjj','333333333','jjj@yahoo.com',NULL,'shyam',1,24,300000,NULL),
---  ('hency','s','pujara','Female',NULL,'dall mil raod','9376822145','h@yahoo.com',NULL,'shyam',5,40,300000,NULL),
---  ('fency','f','patel','Female',NULL,'fatehnagar','9228183186','fency@yahoo.com',NULL,'shyam',1,41,400000,NULL),
---  ('nency','n','shah','Female',NULL,'ramnagar','9376822145','nency@gmail.com',NULL,'shyam',2,42,500000,NULL),
---  ('nency','n','shah','Female',NULL,'ramnagar','9376822145','nency@gmail.com',NULL,'shyam',2,43,500000,NULL),
---  ('Yogeshbhai','J','Joshi','Male',NULL,'Kundan Apartment ','9016625525','yogesh@gmail.com',NULL,'shyam',1,44,700000,NULL),
---  ('Jaiminbhai','K','Patel','Male',NULL,'Varachha Road','9016654254','jaimin@yahoo.com',NULL,'shyam',3,45,800000,NULL),
---  ('Bhaveshbhai','B','Prajapati','Male',NULL,'Kalupur','9016622222','bhavesh@gmail.com',NULL,'shyam',1,46,900000,NULL),
---  ('Bhaveshbhai','B','Prajapati','Male',NULL,'Kalupur','9016622222','bhavesh@gmail.com',NULL,'shyam',1,47,900000,NULL),
---  ('Rameshbhai','D','Patel','Male',NULL,'Kundan Apartment\r\nDiv-A','9909099090','ramesh@gmail.com',NULL,'shyam',1,48,380380,NULL),
---  ('Mahesh','K','Patel','Male',NULL,'Kundan Aprtment\r\nDiv-B','9909099091','mahesh@yahoo.com',NULL,'shyam',1,49,380380,NULL),
---  ('Nareshbhai','H','Patel','Male',NULL,'Kundan Apartment\r\nDiv-C','9909099092','naresh@yahoo.com',NULL,'shyam',1,50,380380,NULL),
---  ('Helly','h','thakkar','Female',NULL,'karelibag','9376822145','h@yahoo.com',NULL,'shyam',2,51,400000,NULL),
---  ('rena','m','patel','Female',NULL,'shastrinagar','9228183186','rn@yahoo.com',NULL,'shyam',1,52,538987,NULL),
---  ('sweta','s','tiwari','Female',NULL,'navrangpura','9998027555','s@yahoo.com',NULL,'shyam',1,53,436567,NULL),
---  ('sweta','s','tiwari','Female',NULL,'navrangpura','9998027555','s@yahoo.com',NULL,'shyam',1,54,436567,NULL),
---  ('aaa','a','aaa','Female',NULL,'paladi','9427630171','a@yahoo.com',NULL,'shyam',1,55,100000,NULL);
+INSERT INTO `profile` (`first_name`,`middle_name`,`last_name`,`gender`,`Dob`,`address`,`contact_no`,`emailid`,`username`,`city_id`,`id`,`pincode`,`area_id`) VALUES 
+ ('ggg','g','ggg','Male','2010-04-20 00:00:00','ff','444444444','d@yahoo.com','upload/Forest.jpg','ggg',1,12,444444,NULL),
+ ('krishi','K','thakkar','Female','2002-05-06 00:00:00','Kareli bag','9998205920','k@gmail.com','upload/Winter Leaves.jpg','krishi',2,13,400000,NULL),
+ ('fgfgf','fff','fffffgf','Male',NULL,'gdshdh','888888888888','fg@yahoo.com',NULL,'fff',1,14,464643,NULL),
+ ('param','l','patel','Male',NULL,'GSEB ','5555555555','param@gmail.com',NULL,'param',3,15,500000,NULL),
+ ('komal','p','shah','Female',NULL,'chintamani','07926576156','koms@yahoo.com',NULL,'komal',1,16,380058,NULL),
+ ('kinjal','m','patel','Female',NULL,'gf','111111111111','k@gmail.com',NULL,'kinjal',3,17,435555,NULL),
+ ('pradeep','m','purohit','Male',NULL,'ggfdggfdg','6546687687','p@yahoo.com',NULL,'pradeep',3,19,345555,NULL),
+ ('sss','s','sss','Male',NULL,'ssssssxxxsssss','57657657575','s@yahoo.com',NULL,'sss',2,20,400000,NULL),
+ ('jjj','j','jjj','Male',NULL,'jjjj','333333333','jjj@yahoo.com',NULL,'shyam',1,24,300000,NULL),
+ ('hency','s','pujara','Female',NULL,'dall mil raod','9376822145','h@yahoo.com',NULL,'shyam',5,40,300000,NULL),
+ ('fency','f','patel','Female',NULL,'fatehnagar','9228183186','fency@yahoo.com',NULL,'shyam',1,41,400000,NULL),
+ ('nency','n','shah','Female',NULL,'ramnagar','9376822145','nency@gmail.com',NULL,'shyam',2,42,500000,NULL),
+ ('nency','n','shah','Female',NULL,'ramnagar','9376822145','nency@gmail.com',NULL,'shyam',2,43,500000,NULL),
+ ('Yogeshbhai','J','Joshi','Male',NULL,'Kundan Apartment ','9016625525','yogesh@gmail.com',NULL,'shyam',1,44,700000,NULL),
+ ('Jaiminbhai','K','Patel','Male',NULL,'Varachha Road','9016654254','jaimin@yahoo.com',NULL,'shyam',3,45,800000,NULL),
+ ('Bhaveshbhai','B','Prajapati','Male',NULL,'Kalupur','9016622222','bhavesh@gmail.com',NULL,'shyam',1,46,900000,NULL),
+ ('Bhaveshbhai','B','Prajapati','Male',NULL,'Kalupur','9016622222','bhavesh@gmail.com',NULL,'shyam',1,47,900000,NULL),
+ ('Rameshbhai','D','Patel','Male',NULL,'Kundan Apartment\r\nDiv-A','9909099090','ramesh@gmail.com',NULL,'shyam',1,48,380380,NULL),
+ ('Mahesh','K','Patel','Male',NULL,'Kundan Aprtment\r\nDiv-B','9909099091','mahesh@yahoo.com',NULL,'shyam',1,49,380380,NULL),
+ ('Nareshbhai','H','Patel','Male',NULL,'Kundan Apartment\r\nDiv-C','9909099092','naresh@yahoo.com',NULL,'shyam',1,50,380380,NULL),
+ ('Helly','h','thakkar','Female',NULL,'karelibag','9376822145','h@yahoo.com',NULL,'shyam',2,51,400000,NULL),
+ ('rena','m','patel','Female',NULL,'shastrinagar','9228183186','rn@yahoo.com',NULL,'shyam',1,52,538987,NULL),
+ ('sweta','s','tiwari','Female',NULL,'navrangpura','9998027555','s@yahoo.com',NULL,'shyam',1,53,436567,NULL),
+ ('sweta','s','tiwari','Female',NULL,'navrangpura','9998027555','s@yahoo.com',NULL,'shyam',1,54,436567,NULL),
+ ('aaa','a','aaa','Female',NULL,'paladi','9427630171','a@yahoo.com',NULL,'shyam',1,55,100000,NULL);
 -- /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 
 
