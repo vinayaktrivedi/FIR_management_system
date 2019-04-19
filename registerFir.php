@@ -1,5 +1,6 @@
 <?php
 session_start();
+$err = "";
 class compareImages
 {
 	public function mimeType($i)
@@ -131,16 +132,17 @@ function upload_photo($string,$target_dir,$id){
         $uploadOk = 1;
     } else {
         $err =  "File is not an image.";
-        echo $err;
-        exit(1);
         $uploadOk = 0;
+        echo $err;
+  				exit(1);
         return false;
     }
     if (file_exists($target_file)) {
 	    $err =  "Sorry, file already exists.";
-	    echo $err.$target_file;
-        exit(1);
+	    
 	    $uploadOk = 0;
+	    echo $err;
+  				exit(1);
 	    return false;
 	}
 	
@@ -148,7 +150,7 @@ function upload_photo($string,$target_dir,$id){
 	    $err =  "Sorry, your file is too large.";
 	    $uploadOk = 0;
 	    echo $err;
-        exit(1);
+  				exit(1);
 	    return false;
 	}
 	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
@@ -156,7 +158,7 @@ function upload_photo($string,$target_dir,$id){
 	    $err =  "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
 	    $uploadOk = 0;
 	    echo $err;
-        exit(1);
+  				exit(1);
 	    return false;
 	}
 	
@@ -164,7 +166,7 @@ function upload_photo($string,$target_dir,$id){
 
 	    $err =  "Sorry, your file was not uploaded.";
 	    echo $err;
-        exit(1);
+  				exit(1);
 	    return false;
 	
 	} else {
@@ -173,7 +175,7 @@ function upload_photo($string,$target_dir,$id){
 	    } else {
 	        $err = "Sorry, there was an error uploading your file.";
 	        echo $err;
-        	exit(1);
+  				exit(1);
 	        return false;
 	    }
 	}
@@ -188,12 +190,12 @@ function test_input($data) {
 
 function get_score($myphoto){
 	$obj = new compareImages();
-	$dir = new DirectoryIterator(dirname('users'));
+	$dir = new DirectoryIterator('users');
 	foreach ($dir as $fileinfo) {
 	    if (!$fileinfo->isDot()) {
 	        $filename = $fileinfo->getFilename();
-	        $result = $obj->compare($myphoto,$filename);
-	        if ($result < 1){
+	        $result = $obj->compare($myphoto,'users/'.$filename);
+	        if ($result == 0){
 	        	$arr = explode('.', $filename);
 	        	return (int)$arr[0];
 	        }
@@ -405,24 +407,35 @@ else if($_POST["stage"]=="register_submit"){
   			if ($ok){				
   				$criminal_id = get_score($myphoto);
   			}
-  			if ($criminal_id>0){
-  				$_SESSION["registerUsermsg"] .= "Found the criminal with User id as ".$criminal_id;
+  			else{
+  				echo $err;
+  				exit(1);
+  			}
+  			if ($criminal_id>=0){
+  				$query = "update fir_details set criminal_id='$criminal_id' where F_id='$last_id' ";
+				$insres = $db->query($qstr);
+  				$_SESSION["registerUsermsg"] .= "\nFound the criminal with User id as ".$criminal_id;
   			}
   		}
   		if (empty($victim_id)){
   			$target_dir = 'firs/victims/';
-  			upload_photo('victim_id',$target_dir,$last_id);
+  			$ok = upload_photo('victim_photo',$target_dir,$last_id);
   			$myphoto = 'firs/victims/'.strval($last_id).".jpg";
   			if ($ok){
   				$victim_id = get_score($myphoto);
   			}
-  			if ($criminal_id>0){
-  				$_SESSION["registerUsermsg"] .= "Found the victim with User id as ".$victim_id;
+  			else{
+  				echo $err;
+  				exit(1);
+  			}
+  			if ($victim_id>=0){
+  				$query = "update fir_details set victim_id='$victim_id' where F_id='$last_id' ";
+				$insres = $db->query($qstr);
+  				$_SESSION["registerUsermsg"] .= "\nFound the victim with User id as ".$victim_id;
   			}
   		}
 
-  		$query = "update fir_details set criminal_id='$criminal_id',victim_id='$victim_id' where F_id='$last_id' ";
-		$insres = $db->query($qstr);
+  		
   		header('Location: http://localhost:8080/home.php');
   		
 	}
