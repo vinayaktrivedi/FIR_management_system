@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 #showing form for registering FIR
 if($_POST["stage"]=="register_form"){
 	$return =<<<HTML
