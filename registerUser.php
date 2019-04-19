@@ -153,11 +153,26 @@ else if($_POST["stage"]=="register_user_submit"){
 		$gender = ($_POST["gender"]);
 		$contact = $_POST["contact"];
 		$address = $_POST["address"];
+
+		$result = $db->query("SELECT id FROM profile WHERE emailid = '$email'");
+		$count=0;
+		while($row = $result->fetchArray()) {
+			$count++;
+		}
+		if($count > 0){
+			$result = $db->query("SELECT id FROM profile WHERE emailid = '$email'");
+			$row = $result->fetchArray();
+			$_SESSION["registerUsermsg"] = "User already registered with id ".$row[0];
+			header('Location: http://localhost:8080/home.php');
+			exit(1);
+		}
+	
   		$qstr = "insert into profile (name,gender,address,contact_no, emailid,city_id, area_id)  values ('$name', '$gender', '$address', '$contact', '$email', '$city_id', '$area_id')";
 		$db->exec($qstr);
+		$result = $db->query("SELECT id FROM profile WHERE emailid = '$email'");
+		$row = $result->fetchArray();
+		$_SESSION["registerUsermsg"] = "User registered with id ".$row[0];
 		header('Location: http://localhost:8080/home.php');
-
-
 		exit(1);
 		  
 	}
