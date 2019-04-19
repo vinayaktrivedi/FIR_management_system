@@ -1,9 +1,6 @@
 <?php
-
-#showing form for registering FIR
-if($_POST["stage"]=="revoke_form"){
-	$return =<<<HTML
-<!DOCTYPE html>
+session_start();
+$template = '<!DOCTYPE html>
 <html lang="en">
 <head>
 	<title>Contact V1</title>
@@ -41,15 +38,15 @@ if($_POST["stage"]=="revoke_form"){
 			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Log out" >
 			</form>
 			<br >
-			<form class="contact1-form validate-form" action="registerFir.php" method="post">
+			<form class="contact1-form validate-form" action="revokeFir.php" method="post">
 
-			<input type="hidden" name="stage" value="register_submit" >
+			<input type="hidden" name="stage" value="revoke_submit" >
 				<span class="contact1-form-title">
 					Revoke FIR
 				</span>
 
 				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="id" placeholder="ID">
+					<input class="input1" type="text" name="reg_id" placeholder="REG ID">
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
@@ -82,7 +79,7 @@ if($_POST["stage"]=="revoke_form"){
 <!--===============================================================================================-->
 	<script src="vendor/tilt/tilt.jquery.min.js"></script>
 	<script >
-		$('.js-tilt').tilt({
+		$(".js-tilt").tilt({
 			scale: 1.1
 		})
 	</script>
@@ -92,9 +89,9 @@ if($_POST["stage"]=="revoke_form"){
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  gtag("js", new Date());
 
-  gtag('config', 'UA-23581568-13');
+  gtag("config", "UA-23581568-13");
 </script>
 
 <!--===============================================================================================-->
@@ -102,14 +99,58 @@ if($_POST["stage"]=="revoke_form"){
 
 </body>
 </html>
+';
+#showing form for registering FIR
 
-HTML;
-	echo $return;
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+	if (!isset($_SESSION["station_id"])){
+		header('Location: http://localhost:8080');
+		exit(1);
+	}
+	else{
+		echo $_SESSION["revokeMsg"];
+		echo $template;
+	}
+}
+
+
+elseif($_POST["stage"]=="revoke_form"){
+	if (!isset($_SESSION["station_id"])){
+		header('Location: http://localhost:8080');
+		exit(1);
+	}
+	else{
+		echo $template;
+	}
 }
 
 
 #backend for registering 
 else if($_POST["stage"]=="revoke_submit"){
-	//$db = new SQLite3('mysqlitedb.db');
+	$db = new SQLite3('fir.db');
+	$reg_id = ($_POST["reg_id"]);
+	$f_id = ($_POST["f_id"]);
+	$result = $db->query("SELECT f_id FROM fir_details WHERE f_id = '$f_id' and reg_id = '$reg_id'");
+	$row = $result->fetchArray();
+	if ($row) {
+		echo "Sucessfully Revoked $row[0]";
+		// TODO exec query
+		$_SESSION["revokeMsg"] = "Successful";
+		header('Location: http://localhost:8080/home.php');
+	}
+	else {
+		$_SESSION["revokeMsg"] = "Invalid Details";
+		header('Location: http://localhost:8080/revokeFir.php');
+	}
+}
+else if ($_SERVER["REQUEST_METHOD"] == "GET") {
+	if (!isset($_SESSION["station_id"])){
+		header('Location: http://localhost:8080');
+	}
+	else{
+		echo "<br>";
+		header('Location: http://localhost:8080/revokeFir.php');
+		exit(1);
+	}
 }
 ?>
