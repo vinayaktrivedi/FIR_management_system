@@ -1,17 +1,4 @@
 <?php
-session_start();
-if(isset($_SESSION["msg"])) {
-	$msg = $_SESSION["msg"];
-	session_unset($_SESSION["msg"]);
-} else {
-	$msg = "";
-}
-if(isset($_SESSION["error"])) {
-	$error = $_SESSION["error"];
-	session_unset($_SESSION["error"]);
-} else {
-	$error = "";
-}
 
 $return =<<<HTML
 <!DOCTYPE html>
@@ -38,8 +25,6 @@ $return =<<<HTML
 <!--===============================================================================================-->
 </head>
 <body>
-	<div class="message"><center>{$msg}</center></div><br />
-	<div class="error"><center>{$error}</center></div><br />
 	<div class="contact1">
 	
 		<div class="container-contact1">	

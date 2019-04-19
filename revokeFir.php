@@ -31,7 +31,16 @@ if($_POST["stage"]=="revoke_form"){
 	<div class="contact1">
 	
 		<div class="container-contact1">	
-			
+			<form action="home.php" method="post">
+			 	<input type="hidden" name="stage" value="backtohome" >	
+			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Home" >
+			</form>
+			<br>
+			<form action="home.php" method="post">
+			 	<input type="hidden" name="stage" value="logout" >	
+			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Log out" >
+			</form>
+			<br >
 			<form class="contact1-form validate-form" action="registerFir.php" method="post">
 
 			<input type="hidden" name="stage" value="register_submit" >

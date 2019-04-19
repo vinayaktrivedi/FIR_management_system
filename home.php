@@ -1,7 +1,7 @@
 <?php
-session_start();
 
-if($_POST["stage"]=="login_submit"){
+
+if($_POST["stage"]=="login_submit" or isset($_SESSION["station_id"])){
     $db = new SQLite3('fir.db');
     $station_id= $_POST["station_id"];
     $pass = $_POST["password"];
@@ -11,9 +11,12 @@ if($_POST["stage"]=="login_submit"){
         $count++;
     }
     if($count <= 0){
-        $_SESSION["error"]="Incorrect Station id or password";
         header('Location: index.php');
         exit;
+    }
+    if(!isset($_SESSION["station_id"])){
+        session_start();
+        $_SESSION["station_id"]=$station_id;
     }
 	$return =<<<HTML
 <!DOCTYPE html>
@@ -48,13 +51,17 @@ if($_POST["stage"]=="login_submit"){
 	 			<input type="hidden" name="stage" value="register_form" >	
  				<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Register FIR" >
 			 </form>
-			 <br /><br />
+			 <br >
 			 <form action="revokeFir.php" method="post">
 			 	<input type="hidden" name="stage" value="revoke_form" >	
 			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Revoke FIR" >
 			</form>
 			<br>
-			
+            <form action="home.php" method="post">
+			 	<input type="hidden" name="stage" value="logout" >	
+			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Log out" >
+			</form>
+			<br>
 			
 			<form class="contact1-form validate-form" action="query.php" method="post">
 
@@ -123,6 +130,16 @@ if($_POST["stage"]=="login_submit"){
 
 HTML;
 	echo $return;
+}
+
+else if($_POST["stage"]=="logout"){
+    unset($_SESSION["station_id"]);
+    header('Location: index.php');
+    exit;
+}
+else if($_POST["stage"]=="backtohome"){
+    header('Location: home.php');
+    exit;
 }
 
 ?>
