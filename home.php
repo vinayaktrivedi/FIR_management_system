@@ -42,7 +42,12 @@ $template = '<!DOCTYPE html>
 			 	<input type="hidden" name="stage" value="register_user" >	
 			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Register User" >
 			</form>
-			<br>
+            <br>
+            <form action="stats.php" method="post">
+			 	<input type="hidden" name="stage" value="show_stats" >	
+			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Show Stats" >
+            </form>
+            <br>
             <form action="home.php" method="post">
 			 	<input type="hidden" name="stage" value="logout" >	
 			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Log out" >
