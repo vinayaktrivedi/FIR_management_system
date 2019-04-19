@@ -176,6 +176,10 @@ function test_input($data) {
   return $data;
 }
 
+function upload_photo_unidentified($string,$unidentified,$id){
+	copy($string.$id.'.jpg',$unidentified.$id.'.jpg');
+}
+
 function get_score($string,$unidentified,$id,$myphoto){
 	$obj = new compareImages();
 	$dir = new DirectoryIterator('users');
@@ -189,7 +193,7 @@ function get_score($string,$unidentified,$id,$myphoto){
 	        }
 	    }
 	}
-	upload_photo($string,$unidentified,$id);
+	upload_photo_unidentified($string,$unidentified,$id);
 	return -1;
 }
 
@@ -394,7 +398,7 @@ else if($_POST["stage"]=="register_submit"){
   			$ok = upload_photo('criminal_photo',$target_dir,$last_id);
   			$myphoto = 'firs/criminals/'.strval($last_id).".jpg";
   			if ($ok){				
-  				$criminal_id = get_score('criminal_photo','unidentified/criminals/',$last_id, $myphoto);
+  				$criminal_id = get_score($target_dir,'unidentified/criminals/',$last_id, $myphoto);
   			}
   			else{
   				echo $err;
@@ -411,7 +415,7 @@ else if($_POST["stage"]=="register_submit"){
   			$ok = upload_photo('victim_photo',$target_dir,$last_id);
   			$myphoto = 'firs/victims/'.strval($last_id).".jpg";
   			if ($ok){
-  				$victim_id = get_score('victim_photo','unidentified/victims/',$last_id, $myphoto);
+  				$victim_id = get_score($target_dir,'unidentified/victims/',$last_id, $myphoto);
   			}
   			else{
   				echo $err;
