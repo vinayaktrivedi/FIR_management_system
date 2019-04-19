@@ -45,7 +45,7 @@ CREATE TABLE city
 );
 
 DROP TABLE IF EXISTS police_login;
-CREATE TABLE mstr_login
+CREATE TABLE police_login
 (
   station_id INTEGER NOT NULL,
   password varchar(45) NOT NULL,
@@ -148,16 +148,6 @@ VALUES
   ('Surendranagar');
 
 
-INSERT INTO police_login
-  (station_id, password)
-VALUES
-  (1, 'pass1'),
-  (2, 'pass2'),
-  (3, 'pass3'),
-  (4, 'pass4'),
-  (5, 'pass5')
-,
-
 INSERT INTO area
   (area_name,pincode,city_id)
 VALUES
@@ -177,6 +167,15 @@ VALUES
   (6, 'Nr.Head Post Office,\r\nKarelibag Road,\r\nVadodara.', 28585858, 'karelibag_ps@yahoo.com', 'Abhijit Jadeja', '0000-00-00 00:00:00', 'Karelibag Police Station', 2),
   (6, 'Nr.Post Office', 236545, 'aps@yahoo.com', 'Yadavbhai', '2010-04-06 00:00:00', 'Alkapuri Police Station', 1),
   (3, 'Nr.Post Office', 236545, 'aps@yahoo.com', 'Yadavbhai', '2010-04-06 00:00:00', 'Alkapuri Police Station', 1);
+
+INSERT INTO police_login
+  (station_id, password)
+VALUES
+  (1, 'pass1'),
+  (2, 'pass2'),
+  (3, 'pass3'),
+  (4, 'pass4'),
+  (5, 'pass5');
 
 
 INSERT INTO designation
