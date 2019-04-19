@@ -1,4 +1,5 @@
 <?php
+session_start();
 $template = '<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 }
 
 else if($_POST["stage"]=="login_submit" ){
-	session_start();
+	
     $db = new SQLite3('fir.db');
     $station_id= $_POST["station_id"];
     $pass = $_POST["password"];
@@ -133,8 +134,8 @@ else if($_POST["stage"]=="login_submit" ){
         $count++;
     }
     if($count <= 0){
-        header('Location: index.php');
-        exit;
+        header('Location: http://localhost:8080');
+        exit(1);
     }
     if(!isset($_SESSION["station_id"])){
         $_SESSION["station_id"]=$station_id;
@@ -144,7 +145,8 @@ else if($_POST["stage"]=="login_submit" ){
 else if($_POST["stage"]=="logout"){
     unset($_SESSION["station_id"]);
     session_destroy();
-    header('Location: index.php');
+    header('Location: http://localhost:8080');
+    exit(1);
     exit;
 }
 else if($_POST["stage"]=="backtohome"){

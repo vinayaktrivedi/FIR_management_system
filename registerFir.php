@@ -1,4 +1,5 @@
 <?php
+session_start();
 $template = '<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,6 +118,7 @@ $template = '<!DOCTYPE html>
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	if (!isset($_SESSION["station_id"])){
 		header('Location: http://localhost:8080');
+		exit(1);
 	}
 	else{
 		echo $template;
@@ -126,6 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 else if($_POST["stage"]=="register_form"){
 	if (!isset($_SESSION["station_id"])){
 		header('Location: http://localhost:8080');
+		exit(1);
 	}
 	else{
 		echo $template;
@@ -135,6 +138,7 @@ else if($_POST["stage"]=="register_form"){
 else if($_POST["stage"]=="register_submit"){
 	if (!isset($_SESSION["station_id"])){
 		header('Location: http://localhost:8080');
+		exit(1);
 	}
 	else{
 		$db = new SQLite3('mysqlitedb.db');
