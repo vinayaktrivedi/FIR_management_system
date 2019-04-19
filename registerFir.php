@@ -1,11 +1,5 @@
 <?php
-
-session_start();
-
-#showing form for registering FIR
-if($_POST["stage"]=="register_form"){
-	$return =<<<HTML
-<!DOCTYPE html>
+$template = '<!DOCTYPE html>
 <html lang="en">
 <head>
 	<title>Contact V1</title>
@@ -99,7 +93,7 @@ if($_POST["stage"]=="register_form"){
 <!--===============================================================================================-->
 	<script src="vendor/tilt/tilt.jquery.min.js"></script>
 	<script >
-		$('.js-tilt').tilt({
+		$(".js-tilt").tilt({
 			scale: 1.1
 		})
 	</script>
@@ -109,24 +103,48 @@ if($_POST["stage"]=="register_form"){
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  gtag("js", new Date());
 
-  gtag('config', 'UA-23581568-13');
+  gtag("config", "UA-23581568-13");
 </script>
 
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
 
 </body>
-</html>
+</html>';
 
-HTML;
-	echo $return;
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+	if (!isset($_SESSION["station_id"])){
+		header('Location: http://localhost:8080');
+	}
+	else{
+		echo $template;
+	}
+}
+#showing form for registering FIR
+else if($_POST["stage"]=="register_form"){
+	if (!isset($_SESSION["station_id"])){
+		header('Location: http://localhost:8080');
+	}
+	else{
+		echo $template;
+	}
 }
 
-
-#backend for registering 
 else if($_POST["stage"]=="register_submit"){
-	$db = new SQLite3('mysqlitedb.db');
+	if (!isset($_SESSION["station_id"])){
+		header('Location: http://localhost:8080');
+	}
+	else{
+		$db = new SQLite3('mysqlitedb.db');
+		$name = test_input($_POST["name"]);
+	  	$email = test_input($_POST["email"]);
+	  	$website = test_input($_POST["website"]);
+	  	$comment = test_input($_POST["comment"]);
+	  	$gender = test_input($_POST["gender"]);
+  		$qstr = "insert into records values ('$name', '$email', '$website', '$gender')";
+  		$insres = $db->query($qstr);
+	}
 }
 ?>
