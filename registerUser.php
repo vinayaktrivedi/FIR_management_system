@@ -1,5 +1,169 @@
 <?php
 session_start();
+
+
+class compareImages
+{
+	public function mimeType($i)
+	{
+		/*returns array with mime type and if its jpg or png. Returns false if it isn't jpg or png*/
+		$mime = getimagesize($i);
+		$return = array($mime[0],$mime[1]);
+      
+		switch ($mime['mime'])
+		{
+			case 'image/jpeg':
+				$return[] = 'jpg';
+				return $return;
+			case 'image/png':
+				$return[] = 'png';
+				return $return;
+			default:
+				return false;
+		}
+	}  
+    
+	public function createImage($i)
+	{
+		/*retuns image resource or false if its not jpg or png*/
+		$mime = $this->mimeType($i);
+      
+		if($mime[2] == 'jpg')
+		{
+			return imagecreatefromjpeg ($i);
+		} 
+		else if ($mime[2] == 'png') 
+		{
+			return imagecreatefrompng ($i);
+		} 
+		else 
+		{
+			return false; 
+		} 
+	}
+    
+	public function resizeImage($i,$source)
+	{
+		/*resizes the image to a 8x8 squere and returns as image resource*/
+		$mime = $this->mimeType($source);
+      
+		$t = imagecreatetruecolor(8, 8);
+		
+		$source = $this->createImage($source);
+		
+		imagecopyresized($t, $source, 0, 0, 0, 0, 8, 8, $mime[0], $mime[1]);
+		
+		return $t;
+	}
+    
+    	public function colorMeanValue($i)
+	{
+		/*returns the mean value of the colors and the list of all pixel's colors*/
+		$colorList = array();
+		$colorSum = 0;
+		for($a = 0;$a<8;$a++)
+		{
+		
+			for($b = 0;$b<8;$b++)
+			{
+			
+				$rgb = imagecolorat($i, $a, $b);
+				$colorList[] = $rgb & 0xFF;
+				$colorSum += $rgb & 0xFF;
+				
+			}
+			
+		}
+		
+		return array($colorSum/64,$colorList);
+	}
+    
+    	public function bits($colorMean)
+	{
+		/*returns an array with 1 and zeros. If a color is bigger than the mean value of colors it is 1*/
+		$bits = array();
+		 
+		foreach($colorMean[1] as $color){$bits[]= ($color>=$colorMean[0])?1:0;}
+		return $bits;
+	}
+	
+    	public function compare($a,$b)
+	{
+		/*main function. returns the hammering distance of two images' bit value*/
+		$i1 = $this->createImage($a);
+		$i2 = $this->createImage($b);
+		
+		if(!$i1 || !$i2){return false;}
+		
+		$i1 = $this->resizeImage($i1,$a);
+		$i2 = $this->resizeImage($i2,$b);
+		
+		imagefilter($i1, IMG_FILTER_GRAYSCALE);
+		imagefilter($i2, IMG_FILTER_GRAYSCALE);
+		
+		$colorMean1 = $this->colorMeanValue($i1);
+		$colorMean2 = $this->colorMeanValue($i2);
+		
+		$bits1 = $this->bits($colorMean1);
+		$bits2 = $this->bits($colorMean2);
+		
+		$hammeringDistance = 0;
+		
+		for($a = 0;$a<64;$a++)
+		{
+		
+			if($bits1[$a] != $bits2[$a])
+			{
+				$hammeringDistance++;
+			}
+			
+		}
+		  
+		return $hammeringDistance;
+	}
+}
+
+function test_input($data) {
+	$data = trim($data);
+	$data = stripslashes($data);
+	$data = htmlspecialchars($data);
+	return $data;
+}
+  
+function get_image_victim($myphoto){
+	$obj = new compareImages();
+	$dir = new DirectoryIterator('unidentified_victims');
+	foreach ($dir as $fileinfo) {
+		if (!$fileinfo->isDot()) {
+			$filename = $fileinfo->getFilename();
+			$result = $obj->compare($myphoto,'unidentified_victims/'.$filename);
+			if ($result == 0){
+				$arr = explode('.', $filename);
+				return (int)$arr[0];
+			}
+		}
+	}
+	return -1;
+}
+
+function get_image_criminal($myphoto){
+	$obj = new compareImages();
+	$dir = new DirectoryIterator('unidentified_criminals');
+	foreach ($dir as $fileinfo) {
+		if (!$fileinfo->isDot()) {
+			$filename = $fileinfo->getFilename();
+			$result = $obj->compare($myphoto,'unidentified_criminals/'.$filename);
+			if ($result == 0){
+				$arr = explode('.', $filename);
+				return (int)$arr[0];
+			}
+		}
+	}
+	return -1;
+}
+  
+
+
 function upload_photo($string,$userid){
 	$target_dir = "users/";
 	$target_file = $target_dir . basename($_FILES[$string]["name"]);
@@ -14,29 +178,34 @@ function upload_photo($string,$userid){
         echo "File is not an image.";
         $uploadOk = 0;
     }
-    if (file_exists($target_file)) {
-	    echo "Sorry, file already exists.";
-	    $uploadOk = 0;
-	}
+    // if (file_exists($target_file)) {
+	//     echo "Sorry, file already exists.";
+	//     $uploadOk = 0;
+	// }
 	
 	if ($_FILES[$string]["size"] > 500000) {
 	    echo "Sorry, your file is too large.";
-	    $uploadOk = 0;
+		$uploadOk = 0;
+		return False;
 	}
 	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 	&& $imageFileType != "gif" ) {
 	    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-	    $uploadOk = 0;
+		$uploadOk = 0;
+		return False;
 	}
 	
 	if ($uploadOk == 0) {
-	    echo "Sorry, your file was not uploaded.";
+		echo "Sorry, your file was not uploaded.";
+		return False;
 	
 	} else {
 	    if (move_uploaded_file($_FILES[$string]["tmp_name"], $target_dir.$userid.".".$imageFileType)) {
-	        echo "The file has been uploaded.";
+			echo "The file has been uploaded.";
+			return True;
 	    } else {
-	        echo "Sorry, there was an error uploading your file.";
+			echo "Sorry, there was an error uploading your file.";
+			return False;
 	    }
 	}
 }
@@ -221,7 +390,27 @@ else if($_POST["stage"]=="register_user_submit"){
 		$result = $db->query("SELECT id FROM profile WHERE emailid = '$email'");
 		$row = $result->fetchArray();
 		$_SESSION["registerUsermsg"] = "User registered with id ".$row[0];
-		upload_photo('user_photo',$row[0]);
+		$ok = upload_photo('user_photo',$row[0]);
+
+		$target_dir = "unidentified_criminals/";
+		$myphoto = 'users/'.strval($row[0]).".jpg";
+		if ($ok){				
+			echo "hefasdafdsafsdafasf";
+			$criminal_id = get_image_criminal($myphoto);
+			echo $criminal_id;
+			echo "hfkdsaf";
+		}
+		else{
+			echo "hefasda";
+			echo $err;
+			exit(1);
+		}
+		if ($criminal_id>=0){
+			echo 'found';
+			exit(1);
+			// $_SESSION["registerUsermsg"] .= "\nFound the criminal with User id as ".$criminal_id;
+		}
+
 		header('Location: http://localhost:8080/home.php');
 		exit(1);
 		  
