@@ -128,7 +128,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	}
 	else{
         echo $_SESSION["registerUsermsg"];
-        echo "<br>";
+		unset($_SESSION["registerUsermsg"]);
+		echo "<br>";
 		echo $template;
 	}
 }
