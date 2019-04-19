@@ -121,6 +121,6 @@ class compareImages
 }
 
 $obj = new compareImages();
-$result = $obj->compare('nelson1.jpg','nelson2.jpg');
+$result = $obj->compare('dhoni1.jpg','dhoni2.jpg');
 echo $result;
 ?>

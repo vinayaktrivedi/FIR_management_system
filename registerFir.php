@@ -1,40 +1,180 @@
 <?php
 session_start();
-function upload_photo($string){
-	$target_file = $target_dir . basename($_FILES[$string]["name"]);
+class compareImages
+{
+	public function mimeType($i)
+	{
+		/*returns array with mime type and if its jpg or png. Returns false if it isn't jpg or png*/
+		$mime = getimagesize($i);
+		$return = array($mime[0],$mime[1]);
+      
+		switch ($mime['mime'])
+		{
+			case 'image/jpeg':
+				$return[] = 'jpg';
+				return $return;
+			case 'image/png':
+				$return[] = 'png';
+				return $return;
+			default:
+				return false;
+		}
+	}  
+    
+	public function createImage($i)
+	{
+		/*retuns image resource or false if its not jpg or png*/
+		$mime = $this->mimeType($i);
+      
+		if($mime[2] == 'jpg')
+		{
+			return imagecreatefromjpeg ($i);
+		} 
+		else if ($mime[2] == 'png') 
+		{
+			return imagecreatefrompng ($i);
+		} 
+		else 
+		{
+			return false; 
+		} 
+	}
+    
+	public function resizeImage($i,$source)
+	{
+		/*resizes the image to a 8x8 squere and returns as image resource*/
+		$mime = $this->mimeType($source);
+      
+		$t = imagecreatetruecolor(8, 8);
+		
+		$source = $this->createImage($source);
+		
+		imagecopyresized($t, $source, 0, 0, 0, 0, 8, 8, $mime[0], $mime[1]);
+		
+		return $t;
+	}
+    
+    	public function colorMeanValue($i)
+	{
+		/*returns the mean value of the colors and the list of all pixel's colors*/
+		$colorList = array();
+		$colorSum = 0;
+		for($a = 0;$a<8;$a++)
+		{
+		
+			for($b = 0;$b<8;$b++)
+			{
+			
+				$rgb = imagecolorat($i, $a, $b);
+				$colorList[] = $rgb & 0xFF;
+				$colorSum += $rgb & 0xFF;
+				
+			}
+			
+		}
+		
+		return array($colorSum/64,$colorList);
+	}
+    
+    	public function bits($colorMean)
+	{
+		/*returns an array with 1 and zeros. If a color is bigger than the mean value of colors it is 1*/
+		$bits = array();
+		 
+		foreach($colorMean[1] as $color){$bits[]= ($color>=$colorMean[0])?1:0;}
+		return $bits;
+	}
+	
+    	public function compare($a,$b)
+	{
+		/*main function. returns the hammering distance of two images' bit value*/
+		$i1 = $this->createImage($a);
+		$i2 = $this->createImage($b);
+		
+		if(!$i1 || !$i2){return false;}
+		
+		$i1 = $this->resizeImage($i1,$a);
+		$i2 = $this->resizeImage($i2,$b);
+		
+		imagefilter($i1, IMG_FILTER_GRAYSCALE);
+		imagefilter($i2, IMG_FILTER_GRAYSCALE);
+		
+		$colorMean1 = $this->colorMeanValue($i1);
+		$colorMean2 = $this->colorMeanValue($i2);
+		
+		$bits1 = $this->bits($colorMean1);
+		$bits2 = $this->bits($colorMean2);
+		
+		$hammeringDistance = 0;
+		
+		for($a = 0;$a<64;$a++)
+		{
+		
+			if($bits1[$a] != $bits2[$a])
+			{
+				$hammeringDistance++;
+			}
+			
+		}
+		  
+		return $hammeringDistance;
+	}
+}
+
+function upload_photo($string,$target_dir,$id){
+	$target_file = $target_dir .strval($id).".jpg";
 	$uploadOk = 1;
 	$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 	$check = getimagesize($_FILES[$string]["tmp_name"]);
     if($check !== false) {
-        echo "File is an image - " . $check["mime"] . ".";
+        $err = "File is an image - " . $check["mime"] . ".";
         $uploadOk = 1;
     } else {
-        echo "File is not an image.";
+        $err =  "File is not an image.";
+        echo $err;
+        exit(1);
         $uploadOk = 0;
+        return false;
     }
     if (file_exists($target_file)) {
-	    echo "Sorry, file already exists.";
+	    $err =  "Sorry, file already exists.";
+	    echo $err.$target_file;
+        exit(1);
 	    $uploadOk = 0;
+	    return false;
 	}
 	
 	if ($_FILES[$string]["size"] > 500000) {
-	    echo "Sorry, your file is too large.";
+	    $err =  "Sorry, your file is too large.";
 	    $uploadOk = 0;
+	    echo $err;
+        exit(1);
+	    return false;
 	}
 	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 	&& $imageFileType != "gif" ) {
-	    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+	    $err =  "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
 	    $uploadOk = 0;
+	    echo $err;
+        exit(1);
+	    return false;
 	}
 	
 	if ($uploadOk == 0) {
-	    echo "Sorry, your file was not uploaded.";
+
+	    $err =  "Sorry, your file was not uploaded.";
+	    echo $err;
+        exit(1);
+	    return false;
 	
 	} else {
 	    if (move_uploaded_file($_FILES[$string]["tmp_name"], $target_file)) {
-	        echo "The file has been uploaded.";
+	        return true;
 	    } else {
-	        echo "Sorry, there was an error uploading your file.";
+	        $err = "Sorry, there was an error uploading your file.";
+	        echo $err;
+        	exit(1);
+	        return false;
 	    }
 	}
 }
@@ -44,6 +184,22 @@ function test_input($data) {
   $data = stripslashes($data);
   $data = htmlspecialchars($data);
   return $data;
+}
+
+function get_score($myphoto){
+	$obj = new compareImages();
+	$dir = new DirectoryIterator(dirname('users'));
+	foreach ($dir as $fileinfo) {
+	    if (!$fileinfo->isDot()) {
+	        $filename = $fileinfo->getFilename();
+	        $result = $obj->compare($myphoto,$filename);
+	        if ($result < 1){
+	        	$arr = explode('.', $filename);
+	        	return (int)$arr[0];
+	        }
+	    }
+	}
+	return -1;
 }
 
 $template = '<!DOCTYPE html>
@@ -218,7 +374,7 @@ else if($_POST["stage"]=="register_submit"){
 	}
 	else{
 		$db = new SQLite3('mysqlitedb.db');
-		$target_dir = "uploads/";
+		
 		$time = test_input($_POST["time"]);
 	  	$reg_id = test_input($_POST["reg_id"]);
 	  	$criminal_id = test_input($_POST["criminal_id"]);
@@ -230,27 +386,45 @@ else if($_POST["stage"]=="register_submit"){
 	  	$crime_id = test_input($_POST["crime_id"]);
 	  	$description = test_input($_POST["description"]);
 	  	$current_time = date("Y-m-d");
-	  	if (empty($criminal_id)){
-	  		echo '111';
-	  		exit(1);
-  			upload_photo('criminal_photo');
-  		}
-  		if (empty($victim_id)){
-  			echo '121';
-	  		exit(1);
-  			upload_photo('victim_id');
-  		}
-  		$qstr = "insert into fir_details (time,description,crime_id,id_proof_type,id_proof_no,crimelocation,reg_id,criminal_id,victim_id,dt_time,area_id) values ('$current_time', '$description', '$crime_id', '$id_proof_type','id_proof_no','$location','$reg_id','$criminal_id','$victim_id','$time','$area_id')";
+	  	$qstr = "insert into fir_details (time,description,status,crime_id,id_proof_type,id_proof_no,crimelocation,reg_id,criminal_id,victim_id,dt_time,area_id) values ('$current_time', '$description','1','$crime_id', '$id_proof_type','id_proof_no','$location','$reg_id','$criminal_id','$victim_id','$time','$area_id')";
 
   		$insres = $db->query($qstr);
+  		$last_id = $db->lastInsertRowID();
   		if ($insres){
-  			
+  			$_SESSION["registerUsermsg"] = "FIR Successfully registered! with id as ".$last_id."\n";
+			
   		}else{
-  			echo '221';
-	  		
-  			 echo $db->lastErrorMsg();
-  			 exit(1);
+  			$_SESSION["registerUsermsg"] = "FIR not registered with error as ".$db->lastErrorMsg()."\n";
+  			header('Location: http://localhost:8080/home.php');
+			
   		}
+	  	if (empty($criminal_id)){
+	  		$target_dir = "firs/criminals/";
+  			$ok = upload_photo('criminal_photo',$target_dir,$last_id);
+  			$myphoto = 'firs/criminals/'.strval($last_id).".jpg";
+  			if ($ok){				
+  				$criminal_id = get_score($myphoto);
+  			}
+  			if ($criminal_id>0){
+  				$_SESSION["registerUsermsg"] .= "Found the criminal with User id as ".$criminal_id;
+  			}
+  		}
+  		if (empty($victim_id)){
+  			$target_dir = 'firs/victims/';
+  			upload_photo('victim_id',$target_dir,$last_id);
+  			$myphoto = 'firs/victims/'.strval($last_id).".jpg";
+  			if ($ok){
+  				$victim_id = get_score($myphoto);
+  			}
+  			if ($criminal_id>0){
+  				$_SESSION["registerUsermsg"] .= "Found the victim with User id as ".$victim_id;
+  			}
+  		}
+
+  		$query = "update fir_details set criminal_id='$criminal_id',victim_id='$victim_id' where F_id='$last_id' ";
+		$insres = $db->query($qstr);
+  		header('Location: http://localhost:8080/home.php');
+  		
 	}
 }
 ?>
