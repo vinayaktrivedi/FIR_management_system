@@ -135,6 +135,8 @@ else if($_POST["stage"]=="revoke_submit"){
 	if ($row) {
 		echo "Sucessfully Revoked $row[0]";
 		// TODO exec query
+		$qstr = "UPDATE fir_details SET status = 0 WHERE f_id = '$f_id' and reg_id = '$reg_id'";
+		$db->exec($qstr);
 		$_SESSION["revokeMsg"] = "Successful";
 		header('Location: http://localhost:8080/home.php');
 	}

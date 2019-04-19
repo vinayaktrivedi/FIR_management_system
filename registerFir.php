@@ -364,8 +364,8 @@ else if($_POST["stage"]=="register_submit"){
 		exit(1);
 	}
 	else{
-		$db = new SQLite3('mysqlitedb.db');
-		
+		$db = new SQLite3('fir.db');
+		$target_dir = "uploads/";
 		$time = test_input($_POST["time"]);
 	  	$reg_id = test_input($_POST["reg_id"]);
 	  	$criminal_id = test_input($_POST["criminal_id"]);
@@ -388,7 +388,6 @@ else if($_POST["stage"]=="register_submit"){
   			$_SESSION["registerUsermsg"] = "FIR not registered with error as ".$db->lastErrorMsg()."\n";
   			
   			header('Location: http://localhost:8080/home.php');
-			
   		}
 	  	if (empty($criminal_id)){
 	  		$target_dir = "firs/criminals/";

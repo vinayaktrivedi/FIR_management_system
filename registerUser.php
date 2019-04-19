@@ -1,5 +1,47 @@
 <?php
 session_start();
+function upload_photo($string,$userid){
+	$target_dir = "users/";
+	$target_file = $target_dir . basename($_FILES[$string]["name"]);
+	$uploadOk = 1;
+	$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+	$check = getimagesize($_FILES[$string]["tmp_name"]);
+	echo "adsf ".$string."  ".$userid;
+	if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+    } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+    }
+    if (file_exists($target_file)) {
+	    echo "Sorry, file already exists.";
+	    $uploadOk = 0;
+	}
+	
+	if ($_FILES[$string]["size"] > 500000) {
+	    echo "Sorry, your file is too large.";
+	    $uploadOk = 0;
+	}
+	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+	&& $imageFileType != "gif" ) {
+	    echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+	    $uploadOk = 0;
+	}
+	
+	if ($uploadOk == 0) {
+	    echo "Sorry, your file was not uploaded.";
+	
+	} else {
+	    if (move_uploaded_file($_FILES[$string]["tmp_name"], $target_dir.$userid.".".$imageFileType)) {
+	        echo "The file has been uploaded.";
+	    } else {
+	        echo "Sorry, there was an error uploading your file.";
+	    }
+	}
+}
+
+
 $template = '<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,7 +80,7 @@ $template = '<!DOCTYPE html>
 			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Log out" >
 			</form>
 
-			<form class="contact1-form validate-form" action="registerUser.php" method="post">
+			<form class="contact1-form validate-form" action="registerUser.php" method="post" enctype="multipart/form-data">
 
 			<input type="hidden" name="stage" value="register_user_submit" >
 				<span class="contact1-form-title">
@@ -48,6 +90,13 @@ $template = '<!DOCTYPE html>
 				<div class="wrap-input1 validate-input">
 					<input class="input1" type="text" name="name" placeholder="Name">
 					<span class="shadow-input1"></span>
+				</div>
+				<div class="wrap-input1 validate-input">
+				Provide photo
+				</div>
+				<div class="wrap-input1 validate-input">
+				<input type="file" name="user_photo" id="user_photo">
+				<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
 					<input class="input1" type="text" name="email" placeholder="Email">
@@ -173,7 +222,8 @@ else if($_POST["stage"]=="register_user_submit"){
 		$result = $db->query("SELECT id FROM profile WHERE emailid = '$email'");
 		$row = $result->fetchArray();
 		$_SESSION["registerUsermsg"] = "User registered with id ".$row[0];
-		
+
+		upload_photo('user_photo',$row[0]);
 		header('Location: http://localhost:8080/home.php');
 		exit(1);
 		  
