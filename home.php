@@ -56,7 +56,7 @@ $template = '<!DOCTYPE html>
 			
 			<form class="contact1-form validate-form" action="query.php" method="post">
 
-
+            <br><br><br>
 				<span class="contact1-form-title">
 					Query
 				</span>
@@ -67,7 +67,10 @@ $template = '<!DOCTYPE html>
 				<span class="shadow-input1"></span>
 
 				</div>
-
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="column" placeholder="Num of Columns">
+					<span class="shadow-input1"></span>
+				</div>
 				<div class="wrap-input1 validate-input" data-validate = "Message is required">
 					<textarea class="input1" name="query" placeholder="Query"></textarea>
 					<span class="shadow-input1"></span>

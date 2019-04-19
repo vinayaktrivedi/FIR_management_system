@@ -217,7 +217,7 @@ else if($_POST["stage"]=="register_submit"){
 		exit(1);
 	}
 	else{
-		$db = new SQLite3('mysqlitedb.db');
+		$db = new SQLite3('fir.db');
 		$target_dir = "uploads/";
 		$time = test_input($_POST["time"]);
 	  	$reg_id = test_input($_POST["reg_id"]);
@@ -247,7 +247,6 @@ else if($_POST["stage"]=="register_submit"){
   			
   		}else{
   			echo '221';
-	  		
   			 echo $db->lastErrorMsg();
   			 exit(1);
   		}
