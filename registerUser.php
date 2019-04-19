@@ -38,35 +38,35 @@ $template = '<!DOCTYPE html>
 			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Log out" >
 			</form>
 
-			<form class="contact1-form validate-form" action="registerFir.php" method="post">
+			<form class="contact1-form validate-form" action="registerUser.php" method="post">
 
-			<input type="hidden" name="stage" value="register_submit" >
+			<input type="hidden" name="stage" value="register_user_submit" >
 				<span class="contact1-form-title">
 					Register FIR
 				</span>
 
 				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="id" placeholder="ID">
+					<input class="input1" type="text" name="name" placeholder="Name">
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="id_proof_no" placeholder="ID Proof Number">
+					<input class="input1" type="text" name="gender" placeholder="Gender">
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="id_proof_type" placeholder="ID Proof Type">
+					<input class="input1" type="text" name="city_id" placeholder="City Id">
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="location" placeholder="Location">
+					<input class="input1" type="text" name="area_id" placeholder="Area ID">
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="crime_id" placeholder="Crime ID">
+					<input class="input1" type="text" name="address" placeholder="Address">
 					<span class="shadow-input1"></span>
 				</div>
-				<div class="wrap-input1 validate-input" >
-					<textarea class="input1" name="description" placeholder="Provide Description"></textarea>
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="contact" placeholder="Contact No.">
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="container-contact1-form-btn">
@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	}
 }
 #showing form for registering FIR
-else if($_POST["stage"]=="register_form"){
+else if($_POST["stage"]=="register_user"){
 	if (!isset($_SESSION["station_id"])){
 		header('Location: http://localhost:8080');
 		exit(1);
@@ -135,20 +135,25 @@ else if($_POST["stage"]=="register_form"){
 	}
 }
 
-else if($_POST["stage"]=="register_submit"){
+else if($_POST["stage"]=="register_user_submit"){
 	if (!isset($_SESSION["station_id"])){
 		header('Location: http://localhost:8080');
 		exit(1);
 	}
 	else{
-		$db = new SQLite3('mysqlitedb.db');
-		$name = test_input($_POST["name"]);
-	  	$email = test_input($_POST["email"]);
-	  	$website = test_input($_POST["website"]);
-	  	$comment = test_input($_POST["comment"]);
-	  	$gender = test_input($_POST["gender"]);
-  		$qstr = "insert into records values ('$name', '$email', '$website', '$gender')";
-  		$insres = $db->query($qstr);
+		$db = new SQLite3('fir.db');
+		$name = ($_POST["name"]);
+	  	$email = ($_POST["email"]);
+	  	$city_id = ($_POST["city_id"]);
+	  	$area_id = ($_POST["area_id"]);
+		$gender = ($_POST["gender"]);
+		$contact = $_POST["contact"];
+		$address = $_POST["address"];
+  		$qstr = "insert into profile (name,gender,address,contact_no, emailid,city_id, area_id)  values ('$name', '$gender', '$address', '$contact', '$email', '$city_id', '$area_id')";
+		$db->exec($qstr);
+		header('Location: http://localhost:8080/home.php');
+		exit(1);
+		  
 	}
 }
 ?>
