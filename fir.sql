@@ -84,7 +84,6 @@ CREATE TABLE missingcitizens
   city_id int(10) NOT NULL,
   area_id int(10) NOT NULL,
   special_clue varchar(45) DEFAULT NULL,
-  username varchar(45) NOT NULL,
   FOREIGN KEY (city_id) REFERENCES city (city_id),
   FOREIGN KEY (area_id) REFERENCES area (area_id)
 );
@@ -120,18 +119,14 @@ CREATE TABLE policestation
 DROP TABLE IF EXISTS profile;
 CREATE TABLE profile
 (
-  first_name varchar(45) NOT NULL,
-  middle_name varchar(15) NOT NULL,
-  last_name varchar(45) NOT NULL,
+  name varchar(45) NOT NULL,
   gender varchar(45) NOT NULL,
   Dob datetime DEFAULT NULL,
   address varchar(255) NOT NULL,
   contact_no varchar(45) DEFAULT NULL,
-  emailid varchar(255) NOT NULL,
-  username varchar(45) NOT NULL,
+  emailid varchar(255) NOT NULL UNIQUE,
   city_id int(10) NOT NULL,
   id INTEGER PRIMARY KEY NOT NULL,
-  pincode int(10) NOT NULL,
   area_id int(10) DEFAULT NULL,
   FOREIGN KEY (city_id) REFERENCES city (city_id),
   FOREIGN KEY (area_id) REFERENCES area (area_id)
@@ -202,40 +197,39 @@ VALUES
   ('pradeep', '2010-04-19 00:00:00', 2, 3);
 
 INSERT INTO profile
-  (first_name,middle_name,last_name,gender,Dob,address,contact_no,emailid,username,city_id,id,pincode,area_id)
+  (name, gender, Dob, address, contact_no, emailid, city_id, area_id)
 VALUES
-  ('ggg', 'g', 'ggg', 'Male', '2010-04-20 00:00:00', 'ff', '444444444', 'd@yahoo.com', 'ggg', 1, 12, 444444, NULL),
-  ('krishi', 'K', 'thakkar', 'Female', '2002-05-06 00:00:00', 'Kareli bag', '9998205920', 'k@gmail.com', 'krishi', 2, 13, 400000, NULL),
-  ('fgfgf', 'fff', 'fffffgf', 'Male', NULL, 'gdshdh', '888888888888', 'fg@yahoo.com', 'fff', 1, 14, 464643, NULL),
-  ('param', 'l', 'patel', 'Male', NULL, 'GSEB ', '5555555555', 'param@gmail.com', 'param', 3, 15, 500000, NULL),
-  ('komal', 'p', 'shah', 'Female', NULL, 'chintamani', '07926576156', 'koms@yahoo.com', 'komal', 1, 16, 380058, NULL),
-  ('kinjal', 'm', 'patel', 'Female', NULL, 'gf', '111111111111', 'k@gmail.com', 'kinjal', 3, 17, 435555, NULL),
-  ('pradeep', 'm', 'purohit', 'Male', NULL, 'ggfdggfdg', '6546687687', 'p@yahoo.com', 'pradeep', 3, 19, 345555, NULL),
-  ('sss', 's', 'sss', 'Male', NULL, 'ssssssxxxsssss', '57657657575', 's@yahoo.com', 'sss', 2, 20, 400000, NULL),
-  ('jjj', 'j', 'jjj', 'Male', NULL, 'jjjj', '333333333', 'jjj@yahoo.com', 'shyam', 1, 24, 300000, NULL),
-  ('hency', 's', 'pujara', 'Female', NULL, 'dall mil raod', '9376822145', 'h@yahoo.com', 'shyam', 5, 40, 300000, NULL),
-  ('fency', 'f', 'patel', 'Female', NULL, 'fatehnagar', '9228183186', 'fency@yahoo.com', 'shyam', 1, 41, 400000, NULL),
-  ('nency', 'n', 'shah', 'Female', NULL, 'ramnagar', '9376822145', 'nency@gmail.com', 'shyam', 2, 42, 500000, NULL),
-  ('nency', 'n', 'shah', 'Female', NULL, 'ramnagar', '9376822145', 'nency@gmail.com', 'shyam', 2, 43, 500000, NULL),
-  ('Yogeshbhai', 'J', 'Joshi', 'Male', NULL, 'Kundan Apartment ', '9016625525', 'yogesh@gmail.com', 'shyam', 1, 44, 700000, NULL),
-  ('Jaiminbhai', 'K', 'Patel', 'Male', NULL, 'Varachha Road', '9016654254', 'jaimin@yahoo.com', 'shyam', 3, 45, 800000, NULL),
-  ('Bhaveshbhai', 'B', 'Prajapati', 'Male', NULL, 'Kalupur', '9016622222', 'bhavesh@gmail.com', 'shyam', 1, 46, 900000, NULL),
-  ('Bhaveshbhai', 'B', 'Prajapati', 'Male', NULL, 'Kalupur', '9016622222', 'bhavesh@gmail.com', 'shyam', 1, 47, 900000, NULL),
-  ('Rameshbhai', 'D', 'Patel', 'Male', NULL, 'Kundan Apartment\r\nDiv-A', '9909099090', 'ramesh@gmail.com', 'shyam', 1, 48, 380380, NULL),
-  ('Mahesh', 'K', 'Patel', 'Male', NULL, 'Kundan Aprtment\r\nDiv-B', '9909099091', 'mahesh@yahoo.com', 'shyam', 1, 49, 380380, NULL),
-  ('Nareshbhai', 'H', 'Patel', 'Male', NULL, 'Kundan Apartment\r\nDiv-C', '9909099092', 'naresh@yahoo.com', 'shyam', 1, 50, 380380, NULL),
-  ('Helly', 'h', 'thakkar', 'Female', NULL, 'karelibag', '9376822145', 'h@yahoo.com', 'shyam', 2, 51, 400000, NULL),
-  ('rena', 'm', 'patel', 'Female', NULL, 'shastrinagar', '9228183186', 'rn@yahoo.com', 'shyam', 1, 52, 538987, NULL),
-  ('sweta', 's', 'tiwari', 'Female', NULL, 'navrangpura', '9998027555', 's@yahoo.com', 'shyam', 1, 53, 436567, NULL),
-  ('sweta', 's', 'tiwari', 'Female', NULL, 'navrangpura', '9998027555', 's@yahoo.com', 'shyam', 1, 54, 436567, NULL),
-  ('aaa', 'a', 'aaa', 'Female', NULL, 'paladi', '9427630171', 'a@yahoo.com', 'shyam', 1, 55, 100000, NULL);
+  ('ggg', 'Male', '2010-04-20 00:00:00', 'ff', '444444444', 'd@yahoo.com', 1, NULL),
+  ('krishi', 'Female', '2002-05-06 00:00:00', 'Kareli bag', '9998205920', 'k@gmail.com', 2, NULL),
+  ('fgfgf', 'Male', NULL, 'gdshdh', '888888888888', 'fg@yahoo.com', 1, NULL),
+  ('param', 'Male', NULL, 'GSEB ', '5555555555', 'param@gmail.com', 3, NULL),
+  ('komal', 'Female', NULL, 'chintamani', '07926576156', 'koms@yahoo.com', 1, NULL),
+  ('pradeep', 'Male', NULL, 'ggfdggfdg', '6546687687', '2p@yahoo.com', 3, NULL),
+  ('sss', 'Male', NULL, 'ssssssxxxsssss', '57657657575', 's3@yahoo.com', 2, NULL),
+  ('jjj', 'Male', NULL, 'jjjj', '333333333', 'jj343j@yahoo.com', 1, NULL),
+  ('hency', 'Female', NULL, 'dall mil raod', '9376822145', 'h32@yahoo.com', 5, NULL),
+  ('fency', 'Female', NULL, 'fatehnagar', '9228183186', 'fency@yahoo.com', 1, NULL),
+  ('nency', 'Female', NULL, 'ramnagar', '9376822145', 'nency@gmail.com', 2, NULL),
+  ('nency', 'Female', NULL, 'ramnagar', '9376822145', 'ne3ncy@gmail.com', 2, NULL),
+  ('Yogeshbhai', 'Male', NULL, 'Kundan Apartment ', '9016625525', 'yogesh@gmail.com', 1, NULL),
+  ('Jaiminbhai', 'Male', NULL, 'Varachha Road', '9016654254', 'jaimin@yahoo.com', 3, NULL),
+  ('Bhaveshbhai', 'Male', NULL, 'Kalupur', '9016622222', 'bhavesh@gmail.com', 1, NULL),
+  ('Bhaveshbhai', 'Male', NULL, 'Kalupur', '9016622222', 'bhavesddh@gmail.com', 1, NULL),
+  ('Rameshbhai', 'Male', NULL, 'Kundan Apartment\r\nDiv-A', '9909099090', 'ramesh@gmail.com', 1, NULL),
+  ('Mahesh', 'Male', NULL, 'Kundan Aprtment\r\nDiv-B', '9909099091', 'mahesh@yahoo.com', 1, NULL),
+  ('Nareshbhai', 'Male', NULL, 'Kundan Apartment\r\nDiv-C', '9909099092', 'naresh@yahoo.com', 1, NULL),
+  ('Helly', 'Female', NULL, 'karelibag', '9376822145', 'h43@yahoo.com', 2, NULL),
+  ('rena', 'Female', NULL, 'shastrinagar', '9228183186', 'r3n@yahoo.com', 1, NULL),
+  ('sweta', 'Female', NULL, 'navrangpura', '9998027555', 'fd@yahoo.com', 1, NULL),
+  ('sweta', 'Female', NULL, 'navrangpura', '9998027555', 'fddff@yahoo.com', 1, NULL),
+  ('aaa', 'Female', NULL, 'paladi', '9427630171', 'a323@yahoo.com', 1, NULL);
 --
 INSERT INTO fir_details
   (time,description,status,crime_id,id_proof_type,id_proof_no,crimelocation,reg_id,criminal_id,victim_id,dt_time,area_id)
 VALUES
-  ('2010-10-10 00:00:00', 'laptop', '1', 2, 'Election Card', 4294967295, '80 foot road', 40, 41, 43, '0000-00-00 00:00:00', 6),
-  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 44, 45, 46, '0000-00-00 00:00:00', 1),
-  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 44, 45, 47, '0000-00-00 00:00:00', 1),
-  ('2010-10-10 00:00:00', 'Mobile Stallen', '1', 2, 'Election Card', 380380, 'At Mahalaxmi Cross Road', 48, 49, 50, '0000-00-00 00:00:00', 1),
-  ('2010-10-00 00:00:00', 'laptop', '1', 2, 'Election Card', 346875, 'at ms uni road', 51, 52, 54, NULL, 6);
+  ('2010-10-10 00:00:00', 'laptop', '1', 2, 'Election Card', 4294967295, '80 foot road', 4, 4, 4, '0000-00-00 00:00:00', 6),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 1),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 1),
+  ('2010-10-10 00:00:00', 'Mobile Stallen', '1', 2, 'Election Card', 380380, 'At Mahalaxmi Cross Road', 8, 9, 5, '0000-00-00 00:00:00', 1),
+  ('2010-10-00 00:00:00', 'laptop', '1', 2, 'Election Card', 346875, 'at ms uni road', 13, 12, 11, NULL, 6);
 
