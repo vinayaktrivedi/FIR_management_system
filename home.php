@@ -1,7 +1,5 @@
 <?php
 
-echo $_SESSION["station_id"];
-session_start();
 
 if($_POST["stage"]=="login_submit" ){
     $db = new SQLite3('fir.db');
@@ -15,9 +13,6 @@ if($_POST["stage"]=="login_submit" ){
     if($count <= 0){
         header('Location: index.php');
         exit;
-    }
-    if(!isset($_SESSION["station_id"])){
-        $_SESSION["station_id"]=$station_id;
     }
 	$return =<<<HTML
 <!DOCTYPE html>
@@ -134,7 +129,6 @@ HTML;
 }
 
 else if($_POST["stage"]=="logout"){
-    unset($_SESSION["station_id"]);
     header('Location: index.php');
     exit;
 }
