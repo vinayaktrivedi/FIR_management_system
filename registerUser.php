@@ -27,56 +27,52 @@ $template = '<!DOCTYPE html>
 
 	<div class="contact1">
 	
-		<div class="container-contact1">
-		<form action="registerFir.php" method="post" >
-	 			<input type="hidden" name="stage" value="register_form" >	
- 				<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Register FIR" >
-			 </form>
-			 <br >
-			 <form action="revokeFir.php" method="post">
-			 	<input type="hidden" name="stage" value="revoke_form" >	
-			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Revoke FIR" >
+		<div class="container-contact1">	
+			<form action="home.php" method="post">
+			 	<input type="hidden" name="stage" value="backtohome" >	
+			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Home" >
 			</form>
 			<br>
-			<form action="registerUser.php" method="post">
-			 	<input type="hidden" name="stage" value="register_user" >	
-			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Register User" >
-			</form>
-            <br>
-            <form action="stats.php" method="post">
-			 	<input type="hidden" name="stage" value="show_stats" >	
-			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Show Stats" >
-            </form>
-            <br>
-            <form action="home.php" method="post">
+			<form action="home.php" method="post">
 			 	<input type="hidden" name="stage" value="logout" >	
 			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Log out" >
 			</form>
-			<br>
-			
-			<form class="contact1-form validate-form" action="query.php" method="post">
 
+			<form class="contact1-form validate-form" action="registerFir.php" method="post">
 
+			<input type="hidden" name="stage" value="register_submit" >
 				<span class="contact1-form-title">
-					Query
+					Register FIR
 				</span>
-				<div class="wrap-input1 validate-input" data-validate = "Message is required">
-				<input type="radio" name="query_type" value="select">  Select
-				<input type="radio" name="query_type" value="exec">  Exec
-				
-				<span class="shadow-input1"></span>
 
-				</div>
-
-				<div class="wrap-input1 validate-input" data-validate = "Message is required">
-					<textarea class="input1" name="query" placeholder="Query"></textarea>
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="id" placeholder="ID">
 					<span class="shadow-input1"></span>
 				</div>
-
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="id_proof_no" placeholder="ID Proof Number">
+					<span class="shadow-input1"></span>
+				</div>
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="id_proof_type" placeholder="ID Proof Type">
+					<span class="shadow-input1"></span>
+				</div>
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="location" placeholder="Location">
+					<span class="shadow-input1"></span>
+				</div>
+				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="crime_id" placeholder="Crime ID">
+					<span class="shadow-input1"></span>
+				</div>
+				<div class="wrap-input1 validate-input" >
+					<textarea class="input1" name="description" placeholder="Provide Description"></textarea>
+					<span class="shadow-input1"></span>
+				</div>
 				<div class="container-contact1-form-btn">
 					<button class="contact1-form-btn">
 						<span>
-							Query
+							Register
 							<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
 						</span>
 					</button>
@@ -118,46 +114,41 @@ $template = '<!DOCTYPE html>
 
 </body>
 </html>';
+
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 	if (!isset($_SESSION["station_id"])){
-
 		header('Location: http://localhost:8080');
+		exit(1);
 	}
 	else{
-		echo 'hello'	;
+		echo $template;
+	}
+}
+#showing form for registering FIR
+else if($_POST["stage"]=="register_form"){
+	if (!isset($_SESSION["station_id"])){
+		header('Location: http://localhost:8080');
+		exit(1);
+	}
+	else{
+		echo $template;
 	}
 }
 
-else if($_POST["stage"]=="login_submit" ){
-	
-    $db = new SQLite3('fir.db');
-    $station_id= $_POST["station_id"];
-    $pass = $_POST["password"];
-    $result = $db->query("SELECT * FROM police_login WHERE station_id = '$station_id' and password= '$pass'");
-    $count=0;
-    while($row = $result->fetchArray()) {
-        $count++;
-    }
-    if($count <= 0){
-        header('Location: http://localhost:8080');
-        exit(1);
-    }
-    if(!isset($_SESSION["station_id"])){
-        $_SESSION["station_id"]=$station_id;
-    }
-	echo $template;
+else if($_POST["stage"]=="register_submit"){
+	if (!isset($_SESSION["station_id"])){
+		header('Location: http://localhost:8080');
+		exit(1);
+	}
+	else{
+		$db = new SQLite3('mysqlitedb.db');
+		$name = test_input($_POST["name"]);
+	  	$email = test_input($_POST["email"]);
+	  	$website = test_input($_POST["website"]);
+	  	$comment = test_input($_POST["comment"]);
+	  	$gender = test_input($_POST["gender"]);
+  		$qstr = "insert into records values ('$name', '$email', '$website', '$gender')";
+  		$insres = $db->query($qstr);
+	}
 }
-else if($_POST["stage"]=="logout"){
-    unset($_SESSION["station_id"]);
-    session_destroy();
-    header('Location: http://localhost:8080');
-    exit(1);
-    exit;
-}
-else if($_POST["stage"]=="backtohome"){
-	// header('Location: home.php');
-	echo $template;
-    // exit;
-}
-
 ?>
