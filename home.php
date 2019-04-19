@@ -124,8 +124,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 		header('Location: http://localhost:8080');
 	}
 	else{
-        echo $_SESSION["registerUsermsg"];
-        echo "<br>";
+		
+		echo $_SESSION["registerUsermsg"];
+		unset($_SESSION["registerUsermsg"]);
+		echo "<br>";
 		echo $template;
 	}
 }

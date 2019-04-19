@@ -163,6 +163,7 @@ else if($_POST["stage"]=="register_user_submit"){
 			$result = $db->query("SELECT id FROM profile WHERE emailid = '$email'");
 			$row = $result->fetchArray();
 			$_SESSION["registerUsermsg"] = "User already registered with id ".$row[0];
+			
 			header('Location: http://localhost:8080/home.php');
 			exit(1);
 		}
@@ -172,6 +173,7 @@ else if($_POST["stage"]=="register_user_submit"){
 		$result = $db->query("SELECT id FROM profile WHERE emailid = '$email'");
 		$row = $result->fetchArray();
 		$_SESSION["registerUsermsg"] = "User registered with id ".$row[0];
+		
 		header('Location: http://localhost:8080/home.php');
 		exit(1);
 		  
