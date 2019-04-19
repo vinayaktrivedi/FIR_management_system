@@ -50,6 +50,7 @@ CREATE TABLE police_login
   station_id INTEGER NOT NULL,
   password varchar(45) NOT NULL,
   last_logindatetime datetime DEFAULT NULL,
+  logged_in INTEGER DEFAULT 0,
   FOREIGN KEY (station_id) REFERENCES policestation(poilcestation_id)
 );
 
