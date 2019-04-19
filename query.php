@@ -3,9 +3,11 @@
 if($_POST['query_type'] == 'select'){
 	//$result = $db->query($_POST["query"]);
 	$result = "select";
+	echo $result;
 }
 else if($_POST['query_type'] == 'exec'){
 	$result ="exec";
+	echo $result;
 }
-echo $result;
+
 ?>

@@ -52,7 +52,7 @@ $return =<<<HTML
 				</span>
 
 				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="username" placeholder="Username">
+					<input class="input1" type="text" name="station_id" placeholder="Station id">
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
