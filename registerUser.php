@@ -50,6 +50,10 @@ $template = '<!DOCTYPE html>
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
+					<input class="input1" type="text" name="email" placeholder="Email">
+					<span class="shadow-input1"></span>
+				</div>
+				<div class="wrap-input1 validate-input">
 					<input class="input1" type="text" name="gender" placeholder="Gender">
 					<span class="shadow-input1"></span>
 				</div>
@@ -152,6 +156,8 @@ else if($_POST["stage"]=="register_user_submit"){
   		$qstr = "insert into profile (name,gender,address,contact_no, emailid,city_id, area_id)  values ('$name', '$gender', '$address', '$contact', '$email', '$city_id', '$area_id')";
 		$db->exec($qstr);
 		header('Location: http://localhost:8080/home.php');
+
+
 		exit(1);
 		  
 	}
