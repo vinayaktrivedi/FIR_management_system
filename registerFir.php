@@ -133,40 +133,30 @@ function upload_photo($string,$target_dir,$id){
     } else {
         $err =  "File is not an image.";
         $uploadOk = 0;
-        echo $err;
-  				exit(1);
         return false;
     }
     if (file_exists($target_file)) {
 	    $err =  "Sorry, file already exists.";
 	    
 	    $uploadOk = 0;
-	    echo $err;
-  				exit(1);
 	    return false;
 	}
 	
 	if ($_FILES[$string]["size"] > 500000) {
 	    $err =  "Sorry, your file is too large.";
 	    $uploadOk = 0;
-	    echo $err;
-  				exit(1);
 	    return false;
 	}
 	if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 	&& $imageFileType != "gif" ) {
 	    $err =  "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
 	    $uploadOk = 0;
-	    echo $err;
-  				exit(1);
 	    return false;
 	}
 	
 	if ($uploadOk == 0) {
 
 	    $err =  "Sorry, your file was not uploaded.";
-	    echo $err;
-  				exit(1);
 	    return false;
 	
 	} else {
@@ -174,8 +164,6 @@ function upload_photo($string,$target_dir,$id){
 	        return true;
 	    } else {
 	        $err = "Sorry, there was an error uploading your file.";
-	        echo $err;
-  				exit(1);
 	        return false;
 	    }
 	}
@@ -188,19 +176,20 @@ function test_input($data) {
   return $data;
 }
 
-function get_score($myphoto){
+function get_score($string,$unidentified,$id,$myphoto){
 	$obj = new compareImages();
 	$dir = new DirectoryIterator('users');
 	foreach ($dir as $fileinfo) {
 	    if (!$fileinfo->isDot()) {
 	        $filename = $fileinfo->getFilename();
 	        $result = $obj->compare($myphoto,'users/'.$filename);
-	        if ($result == 0){
+	        if ($result >= 0 && $result<5){
 	        	$arr = explode('.', $filename);
 	        	return (int)$arr[0];
 	        }
 	    }
 	}
+	upload_photo($string,$unidentified,$id);
 	return -1;
 }
 
@@ -397,14 +386,15 @@ else if($_POST["stage"]=="register_submit"){
 			
   		}else{
   			$_SESSION["registerUsermsg"] = "FIR not registered with error as ".$db->lastErrorMsg()."\n";
-  			header('Location: http://localhost:8080/home.php');			
+  			
+  			header('Location: http://localhost:8080/home.php');
   		}
 	  	if (empty($criminal_id)){
 	  		$target_dir = "firs/criminals/";
   			$ok = upload_photo('criminal_photo',$target_dir,$last_id);
   			$myphoto = 'firs/criminals/'.strval($last_id).".jpg";
   			if ($ok){				
-  				$criminal_id = get_score($myphoto);
+  				$criminal_id = get_score('criminal_photo','unidentified/criminals/',$last_id, $myphoto);
   			}
   			else{
   				echo $err;
@@ -421,7 +411,7 @@ else if($_POST["stage"]=="register_submit"){
   			$ok = upload_photo('victim_photo',$target_dir,$last_id);
   			$myphoto = 'firs/victims/'.strval($last_id).".jpg";
   			if ($ok){
-  				$victim_id = get_score($myphoto);
+  				$victim_id = get_score('victim_photo','unidentified/victims/',$last_id, $myphoto);
   			}
   			else{
   				echo $err;
@@ -434,7 +424,6 @@ else if($_POST["stage"]=="register_submit"){
   			}
   		}
 
-  		
   		header('Location: http://localhost:8080/home.php');
   		
 	}
