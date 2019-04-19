@@ -1,19 +1,21 @@
 <?php
 session_start();
-if(isset($_SESSION["msg"])) {
-	$msg = $_SESSION["msg"];
-	session_unset($_SESSION["msg"]);
-} else {
-	$msg = "";
-}
-if(isset($_SESSION["error"])) {
-	$error = $_SESSION["error"];
-	session_unset($_SESSION["error"]);
-} else {
-	$error = "";
-}
 
-$return =<<<HTML
+if($_POST["stage"]=="login_submit"){
+    $db = new SQLite3('fir.db');
+    $station_id= $_POST["station_id"];
+    $pass = $_POST["password"];
+    $result = $db->query("SELECT * FROM police_login WHERE station_id = '$station_id' and password= '$pass'");
+    $count=0;
+    while($row = $result->fetchArray()) {
+        $count++;
+    }
+    if($count <= 0){
+        $_SESSION["error"]="Incorrect Station id or password";
+        header('Location: index.php');
+        exit;
+    }
+	$return =<<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,32 +40,45 @@ $return =<<<HTML
 <!--===============================================================================================-->
 </head>
 <body>
-	<div class="message"><center>{$msg}</center></div><br />
-	<div class="error"><center>{$error}</center></div><br />
+
 	<div class="contact1">
 	
-		<div class="container-contact1">	
+		<div class="container-contact1">
+		<form action="registerFir.php" method="post" >
+	 			<input type="hidden" name="stage" value="register_form" >	
+ 				<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Register FIR" >
+			 </form>
+			 <br /><br />
+			 <form action="revokeFir.php" method="post">
+			 	<input type="hidden" name="stage" value="revoke_form" >	
+			 	<input class="contact1-form-btn" type="submit" name="allreg" style="float:right;" value="Revoke FIR" >
+			</form>
+			<br>
 			
-			<form class="contact1-form validate-form" action="home.php" method="post">
+			
+			<form class="contact1-form validate-form" action="query.php" method="post">
 
-			<input type="hidden" name="stage" value="login_submit" >
+
 				<span class="contact1-form-title">
-					FIR Management System
+					Query
 				</span>
-
-				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="username" placeholder="Username">
-					<span class="shadow-input1"></span>
-				</div>
-				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="password" placeholder="Password">
-					<span class="shadow-input1"></span>
-				</div>
+				<div class="wrap-input1 validate-input" data-validate = "Message is required">
+				<input type="radio" name="query_type" value="select">  Select
+				<input type="radio" name="query_type" value="exec">  Exec
 				
+				<span class="shadow-input1"></span>
+
+				</div>
+
+				<div class="wrap-input1 validate-input" data-validate = "Message is required">
+					<textarea class="input1" name="query" placeholder="Query"></textarea>
+					<span class="shadow-input1"></span>
+				</div>
+
 				<div class="container-contact1-form-btn">
 					<button class="contact1-form-btn">
 						<span>
-							Log In
+							Query
 							<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
 						</span>
 					</button>
@@ -108,4 +123,6 @@ $return =<<<HTML
 
 HTML;
 	echo $return;
+}
+
 ?>
