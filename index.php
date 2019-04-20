@@ -4,7 +4,7 @@ $return =<<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Contact V1</title>
+	<title>FIR CMS</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -41,7 +41,7 @@ $return =<<<HTML
 					<span class="shadow-input1"></span>
 				</div>
 				<div class="wrap-input1 validate-input">
-					<input class="input1" type="text" name="password" placeholder="Password">
+					<input class="input1" type="password" name="password" placeholder="Password">
 					<span class="shadow-input1"></span>
 				</div>
 				

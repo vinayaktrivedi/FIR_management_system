@@ -141,7 +141,8 @@ VALUES
   ('Baroda'),
   ('Surat'),
   ('Gandhinagar'),
-  ('Surendranagar');
+  ('Surendranagar'),
+  ('Wasseypur');
 
 
 INSERT INTO area
@@ -152,7 +153,11 @@ VALUES
   ('Navarangpura', 380006, 1),
   ('Vastrapur', 380001, 1),
   ('Karelibag', 400001, 2),
-  ('Alkapuri', 400002, 2);
+  ('Alkapuri', 400002, 2),
+  ('Kalyanpur', 123412, 3),
+  ('Gomtinagar', 234432, 4),
+  ('Indranagar', 123212, 5),
+  ('Premnagar', 123476, 6);
 
 
 INSERT INTO policestation
@@ -231,5 +236,25 @@ VALUES
   ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 1),
   ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 1),
   ('2010-10-10 00:00:00', 'Mobile Stallen', '1', 2, 'Election Card', 380380, 'At Mahalaxmi Cross Road', 8, 9, 5, '0000-00-00 00:00:00', 1),
-  ('2010-10-00 00:00:00', 'laptop', '1', 2, 'Election Card', 346875, 'at ms uni road', 13, 12, 11, NULL, 6);
+  ('2010-10-00 00:00:00', 'laptop', '1', 2, 'Election Card', 346875, 'at ms uni road', 13, 12, 11, NULL, 6),
+  ('2010-10-10 00:00:00', 'laptop', '1', 2, 'Election Card', 4294967295, '80 foot road', 4, 4, 4, '0000-00-00 00:00:00', 6),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 1),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 1),
+  ('2010-10-10 00:00:00', 'Mobile Stallen', '1', 2, 'Election Card', 380380, 'At Mahalaxmi Cross Road', 8, 9, 5, '0000-00-00 00:00:00', 1),
+  ('2010-10-00 00:00:00', 'laptop', '1', 2, 'Election Card', 346875, 'at ms uni road', 13, 12, 11, NULL, 6),
+  ('2010-10-10 00:00:00', 'laptop', '1', 2, 'Election Card', 4294967295, '80 foot road', 4, 4, 4, '0000-00-00 00:00:00', 7),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 8),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 9),
+  ('2010-10-10 00:00:00', 'Mobile Stallen', '1', 2, 'Election Card', 380380, 'At Mahalaxmi Cross Road', 8, 9, 5, '0000-00-00 00:00:00', 10),
+  ('2010-10-00 00:00:00', 'laptop', '1', 2, 'Election Card', 346875, 'at ms uni road', 13, 12, 11, NULL, 10),
+  ('2010-10-10 00:00:00', 'laptop', '1', 2, 'Election Card', 4294967295, '80 foot road', 4, 4, 4, '0000-00-00 00:00:00', 7),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 8),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 9),
+  ('2010-10-10 00:00:00', 'Mobile Stallen', '1', 2, 'Election Card', 380380, 'At Mahalaxmi Cross Road', 8, 9, 5, '0000-00-00 00:00:00', 10),
+  ('2010-10-00 00:00:00', 'laptop', '1', 2, 'Election Card', 346875, 'at ms uni road', 13, 12, 11, NULL, 10),
+  ('2010-10-10 00:00:00', 'laptop', '1', 2, 'Election Card', 4294967295, '80 foot road', 4, 4, 4, '0000-00-00 00:00:00', 8),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 8),
+  ('2010-10-10 00:00:00', 'hand bag stolen', '1', 2, 'Election Card', 70707070, 'Paldi', 4, 4, 4, '0000-00-00 00:00:00', 9),
+  ('2010-10-10 00:00:00', 'Mobile Stallen', '1', 2, 'Election Card', 380380, 'At Mahalaxmi Cross Road', 8, 9, 5, '0000-00-00 00:00:00', 10),
+  ('2010-10-00 00:00:00', 'laptop', '1', 2, 'Election Card', 346875, 'at ms uni road', 13, 12, 11, NULL, 10);
 

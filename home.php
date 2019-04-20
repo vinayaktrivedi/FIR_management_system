@@ -3,7 +3,7 @@ session_start();
 $template = '<!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Contact V1</title>
+	<title>FIR CMS</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
